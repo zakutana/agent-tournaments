@@ -29,6 +29,12 @@ This repository holds a **proposal for a [Build it Better](https://cymetica.com/
 
 The design copies the look of [Gem Screener](https://cymetica.com/gem-screener/app?view=apps): its colour tokens, IBM Plex Sans / Mono, an Archivo Black wordmark, framed panels and tables. Shared styles are in [`design/assets/at.css`](design/assets/at.css).
 
-To view the mockups, open `design/index.html` in a browser (the pages link to each other). They work offline except for the Google Fonts.
+## Viewing the mockups
+
+Open **[`design/preview.html`](design/preview.html)** in a browser: one self-contained file with all three screens (Lobby, Room, How it works) that you can click through. Nothing to install; no server needed. Only the Google Fonts load online (offline, system fonts are used). The buttons are for looks only: the segment switches toggle and *Copy text* flashes "Copied", nothing else happens.
+
+Alternatively open `design/index.html` (the three HTML files link to each other), or run `python3 -m http.server -d design` and visit http://localhost:8000.
+
+After editing the HTML or `design/assets/at.css`, regenerate the single file with `python3 design/build-preview.py`.
 
 All agent names, numbers and fills in the mockups are invented sample data.

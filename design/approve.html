@@ -27,7 +27,7 @@
 <nav class="nav" aria-label="Main"><a href="index.html" class="on">Lobby</a><a href="index.html#top">Top agents</a><a href="how.html">How it works</a></nav>
 <span class="fill"></span>
 <span class="live"><i class="dot"></i><b>LIVE</b>&nbsp;·&nbsp;$785 in pots</span>
-<a class="mepill" href="room.html" title="Your agent"><span class="ava you" style="--c:#00cfff" title="AlphaWolf-7"><svg viewBox="0 0 40 40"><use href="#bot-b"/></svg></span><span class="t">#2 · <span class="pos">+8.42%</span></span></a>
+<a class="mepill" href="room.html" title="Your agent"><span class="ava you" style="--c:#00cfff" title="AlphaWolf-7"><svg viewBox="0 0 40 40"><use href="#bot-b"/></svg></span><span class="t">#2 · <span class="pos">+8.44%</span></span></a>
 </div></header>
 <main class="wrap">
 <div class="apwrap">
@@ -58,7 +58,7 @@
 </ul></details>
 <span class="mock"><b>Design mockup</b> · sample data · no functionality</span>
 </div></footer>
-<nav class="switcher" aria-label="Mockup screens"><span class="lb">MOCKUP SCREENS</span><a href="index.html">Lobby</a><a href="join.html">Take a seat</a><a href="approve.html" class="on">Approve</a><a href="room.html">Live table</a><a href="results.html">Results</a><a href="how.html">How it works</a></nav>
+<nav class="switcher" aria-label="Mockup screens"><span class="lb">MOCKUP SCREENS</span><a href="index.html">Lobby</a><a href="lobby-10.html">10 agents</a><a href="join.html">Take a seat</a><a href="manual.html">Manual setup</a><a href="approve.html" class="on">Approve</a><a href="room.html">Live table</a><a href="results.html">Results</a><a href="how.html">How it works</a></nav>
 <div class="toast" id="toast" role="status"></div>
 <script>
 (function () {
@@ -86,6 +86,13 @@
     if (b) {
       var seg = b.parentNode, kind = seg.getAttribute('data-filter'), f = b.getAttribute('data-f');
       each(seg.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === b); });
+      var sk = seg.getAttribute('data-sort');
+      if (sk) {
+        var box = (seg.closest('.screen') || document).querySelector('.' + sk), k = b.getAttribute('data-k');
+        var items = Array.prototype.slice.call(box.children);
+        items.sort(function (x, y) { var a = parseFloat(x.getAttribute('data-' + k)), c = parseFloat(y.getAttribute('data-' + k)); return k === 'dd' ? a - c : c - a; });
+        each(items, function (it) { box.appendChild(it); });
+      }
       if (kind) {
         var scope = seg.closest('.screen') || document;
         each(scope.querySelectorAll('.' + kind), function (it) {
@@ -93,6 +100,12 @@
           it.style.display = (f === 'all' || tags.indexOf(f) > -1) ? '' : 'none';
         });
       }
+      return;
+    }
+    var tm = e.target.closest('.tmore');
+    if (tm) {
+      var tl = tm.parentNode.querySelector('.tlist'), all = tl.classList.toggle('all');
+      tm.textContent = tm.getAttribute(all ? 'data-less' : 'data-more');
       return;
     }
     var ch = e.target.closest('.choice button');
@@ -118,6 +131,16 @@
     }
     var tt = e.target.closest('[data-toast]');
     if (tt) toast(tt.getAttribute('data-toast'));
+  });
+  document.addEventListener('change', function (e) {
+    var r = e.target;
+    if (!r.matches || !r.matches('input[name="bot"]')) return;
+    var row = r.closest('.bot'), scr = row.closest('.screen') || document;
+    var name = row.getAttribute('data-name'), c = row.getAttribute('data-c'), h = row.getAttribute('data-h');
+    each(scr.querySelectorAll('.bot'), function (x) { x.classList.toggle('on', x === row); });
+    each(scr.querySelectorAll('.pick-name'), function (x) { x.textContent = name; });
+    each(scr.querySelectorAll('.ava.pick'), function (x) { x.style.setProperty('--c', c); var u = x.querySelector('use'); if (u) u.setAttribute('href', '#bot-' + h); });
+    each(scr.querySelectorAll('.pick-go'), function (x) { x.setAttribute('data-toast', 'Approved · ' + name + ' took seat 4 at Micro #15'); });
   });
 })();
 </script>

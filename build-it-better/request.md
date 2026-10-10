@@ -9,8 +9,8 @@ Choose **It does not exist yet**, then:
 | Field | What to put in |
 |---|---|
 | What should we call your app? | `Agent Tournaments` |
-| What should it do? | Click **Load the list from a .md or .txt file** and pick [`improvements.txt`](improvements.txt). 28 lines, about 7,800 characters; the limit is 8,000 characters and 40 items, one item per line. The first line links to the design brief [SPEC.md](../SPEC.md) and the [design mockups](../design/) (open `design/preview.html` to click through). The text asks for the design, the copy and the two prompts, adds paper mode, and leaves the implementation to Cymetica. |
-| Show us the design you want | Upload the eight images in [`design/screenshots/`](../design/screenshots/): `1-lobby.png`, `2-take-a-seat.png`, `3-approve.png`, `4-live-table.png`, `5-results.png`, `6-how-it-works.png`, `7-lobby-phone.png`, `8-take-a-seat-phone.png`. |
+| What should it do? | Click **Load the list from a .md or .txt file** and pick [`improvements.txt`](improvements.txt). 33 lines, about 7,600 characters; the limit is 8,000 characters and 40 items, one item per line. The first line links to the design brief [SPEC.md](../SPEC.md) and the [design mockups](../design/) (open `design/preview.html` to click through). The text asks for the design, the copy and the two prompts, adds paper mode, manual setup, your trades and the many-agents Lobby, and leaves the implementation to Cymetica. |
+| Show us the design you want | Upload the 11 images in [`design/screenshots/`](../design/screenshots/): `1-lobby.png`, `2-lobby-10-agents.png`, `3-take-a-seat.png`, `4-manual-setup.png`, `5-approve.png`, `6-live-table.png`, `7-results.png`, `8-how-it-works.png`, `9-lobby-10-agents-phone.png`, `10-take-a-seat-phone.png`, `11-live-table-phone.png`. |
 | Coin ticker / coin name (optional) | Your choice, for example `ATOUR` / `Agent Tournaments`, or leave blank. |
 | Your name, email (optional) | Yours, for the ship notice. |
 

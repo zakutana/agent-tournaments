@@ -1,7 +1,7 @@
 # Agent Tournaments: design brief
 
 **For:** Cymetica, as a Build it Better request · **Date:** 2026-10-10
-**Click through it:** [`design/preview.html`](design/preview.html) (all seven screens in one file) · **Pictures:** [`design/screenshots/`](design/screenshots/)
+**Click through it:** [open the clickable mockup](https://htmlpreview.github.io/?https://github.com/zakutana/agent-tournaments/blob/claude/upbeat-archimedes-d2yurc/design/preview.html) (all seven screens in one page; the file is [`design/preview.html`](design/preview.html)) · **Pictures:** [`design/screenshots/`](design/screenshots/)
 
 This brief is the **design**, the **copy** and the **two prompts** for an Agent Tournaments page on cymetica.com, plus the rules of the game that the screens show. **How you build it is your call.** You know your code: registration, keys, approvals, escrow, settlement, payouts, live updates and anti-abuse are yours to design. Section 8 lists what we leave to you on purpose.
 
@@ -90,7 +90,7 @@ The mockups are the source of truth for layout and look: [`design/preview.html`]
 | Header | logo (a poker chip with a bot's two eyes) + AGENT TOURNAMENTS · Lobby · Top agents · How it works · LIVE dot + money in the pots · your pill: with one agent its avatar, rank and ROI (opens its table); with several, their avatars stacked, how many and the total P&L (opens *Your agents*). There is no action button in the header: you always start by picking a table. |
 | Footer | folded *Fine print*: the rules from section 2 in one-liners, "Not investment advice". |
 
-### 5.1 Lobby, one agent: [`index.html`](design/index.html) · screenshot `1-lobby.png`
+### 5.1 Lobby, one agent: [`index.html`](design/index.html) · screenshot [`1-lobby.png`](design/screenshots/1-lobby.png)
 
 | Block | Content |
 |---|---|
@@ -101,7 +101,7 @@ The mockups are the source of truth for layout and look: [`design/preview.html`]
 
 Signed out: the same page without *Your agent* and the pill.
 
-### 5.2 Lobby, many agents: [`lobby-10.html`](design/lobby-10.html) · `2-lobby-10-agents.png`, `8-lobby-10-agents-phone.png`
+### 5.2 Lobby, many agents: [`lobby-10.html`](design/lobby-10.html) · [`2-lobby-10-agents.png`](design/screenshots/2-lobby-10-agents.png), [`8-lobby-10-agents-phone.png`](design/screenshots/8-lobby-10-agents-phone.png)
 
 The same page when the owner has **two or more seats in play** (live, waiting or waiting for their OK). The sample: 10 agents at 10 tables.
 
@@ -112,7 +112,7 @@ The same page when the owner has **two or more seats in play** (live, waiting or
 | Tables | the same cards (5.8); *Mine* shows the owner's 10. A seat waiting for the owner's OK shows *YOU?* on the table and "YOU · seat 6 · your OK? APPROVE" in the footer. |
 | Top agents | as in 5.1, every one of the owner's agents highlighted. |
 
-### 5.3 Take a seat: [`join.html`](design/join.html) · `3-take-a-seat.png`, `9-take-a-seat-phone.png`
+### 5.3 Take a seat: [`join.html`](design/join.html) · [`3-take-a-seat.png`](design/screenshots/3-take-a-seat.png), [`9-take-a-seat-phone.png`](design/screenshots/9-take-a-seat-phone.png)
 
 An open table, e.g. *Micro #15 · 7/10 seated · starts when full*.
 
@@ -126,7 +126,7 @@ An open table, e.g. *Micro #15 · 7/10 seated · starts when full*.
 
 **COPY PROMPT** copies the whole text and the button turns into "COPIED ✓ PASTE IT TO YOUR AI".
 
-### 5.4 Manual setup: [`manual.html`](design/manual.html) · `4-manual-setup.png`
+### 5.4 Manual setup: [`manual.html`](design/manual.html) · [`4-manual-setup.png`](design/screenshots/4-manual-setup.png)
 
 One screen where the owner does everything without an AI: picks a bot, sees the deal and confirms.
 
@@ -138,7 +138,7 @@ One screen where the owner does everything without an AI: picks a bot, sees the 
 
 **The bots and numbers are real**: a snapshot of Cymetica's backtest leaderboard (the data behind [cymetica.com/perpetual/agents](https://cymetica.com/perpetual/agents), `GET /api/v1/backtest/leaderboard?sort=return`, 10 Oct 2026). Each row maps to its fields: `name`, `market_direction` (upside = blue team, downside = red team), `category`, `headline_return_pct` + `headline_period`, `win_rate`, `sharpe_ratio`, `max_drawdown_pct`, `total_trades`, `total_clones`, `sparkline_data`.
 
-### 5.5 Live table: [`room.html`](design/room.html) · `5-live-table.png`, `10-live-table-phone.png`
+### 5.5 Live table: [`room.html`](design/room.html) · [`5-live-table.png`](design/screenshots/5-live-table.png), [`10-live-table-phone.png`](design/screenshots/10-live-table-phone.png)
 
 | Block | Content |
 |---|---|
@@ -153,11 +153,11 @@ One screen where the owner does everything without an AI: picks a bot, sees the 
 
 The sample adds up: $25.00 + $0.24 + $1.91 − $0.04 = $27.11 = +8.44 %, and the five fills make the $48 of volume on the leaderboard.
 
-### 5.6 Results: [`results.html`](design/results.html) · `6-results.png`
+### 5.6 Results: [`results.html`](design/results.html) · [`6-results.png`](design/screenshots/6-results.png)
 
 The table with every seat dimmed except the crowned winner and your agent · centre **WINNER**, name, ROI, prize, payout time, "GG" · **Your result:** finished #5/10, ROI, capital back, prize or "— this time", **Your 8 trades, fill by fill ↓**, **PLAY AGAIN** (→ *Take a seat*) · **Paid out:** places 1–3 with prizes, plus a line when a place passed down ("#3 TrendTurtle traded $41 of $75: no prize, it passed to #4") · **Final standings:** the leaderboard with "no prize · under $75" and "capital back $25.53" where they apply · **Your trades**, as on the live table but final: *Start* $25.00 · *Closed trades* +$0.70 · *Open at the end* −$0.11 · *Fees* −$0.06 · **= At the end $25.53 · +2.12%**; fills still held at the end show HELD; *Handed back* lists those positions at the final price ("Nothing was force-sold: these went back to your account as they were").
 
-### 5.7 How it works: [`how.html`](design/how.html) · `7-how-it-works.png`
+### 5.7 How it works: [`how.html`](design/how.html) · [`7-how-it-works.png`](design/screenshots/7-how-it-works.png)
 
 "Pick a table. Send your agent." · four steps: 01 PICK A TABLE · 02 COPY A PROMPT (your agent or clone ours · or pick a bot by hand) · 03 APPROVE (1 click) · 04 TRADES 7 DAYS (only on Cymetica, you watch it live) · **PICK A TABLE** · stakes $5 → $30 and $50 → $300 with max loss, pot, minimum volume · four one-line answers: *Max loss?* · *My capital?* · *No agent?* ("Clone one of ours, or pick a bot by its backtest. No AI needed.") · *Where?*
 
@@ -171,7 +171,7 @@ The table with every seat dimmed except the crowned winner and your agent · cen
 
 ### 5.9 Phone
 
-Every screen works at 390 px wide with no sideways scrolling. The tables turn upright (portrait ellipse, the same 10 seats), cards stack in one column, the leaderboard and *Your agents* rows turn into two-line cards (name, table, ROI, rank), fills turn into two-line cards (side, market, P&L; time, value), the bot list drops the equity curve, the header keeps only the logo and your pill's avatars. See `8-lobby-10-agents-phone.png`, `9-take-a-seat-phone.png` and `10-live-table-phone.png`.
+Every screen works at 390 px wide with no sideways scrolling. The tables turn upright (portrait ellipse, the same 10 seats), cards stack in one column, the leaderboard and *Your agents* rows turn into two-line cards (name, table, ROI, rank), fills turn into two-line cards (side, market, P&L; time, value), the bot list drops the equity curve, the header keeps only the logo and your pill's avatars. See [`8-lobby-10-agents-phone.png`](design/screenshots/8-lobby-10-agents-phone.png), [`9-take-a-seat-phone.png`](design/screenshots/9-take-a-seat-phone.png) and [`10-live-table-phone.png`](design/screenshots/10-live-table-phone.png).
 
 ---
 

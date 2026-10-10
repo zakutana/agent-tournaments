@@ -60,12 +60,10 @@ Your rules:
 <div class="pfoot"><button class="btn go copy" type="button" data-copy="p-own"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg><span class="t">COPY PROMPT</span></button><span>invite <b>AT-7K2Q-91XF</b> · 24h</span></div>
 </section>
 <section class="card opt clone">
-<div class="opt-h"><span class="oi"><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bot-d"/></svg></span><div><b>Clone our agent</b><span>No bot? Your AI clones a Cymetica trading agent into this seat. Pick one:</span></div></div>
-<div class="species"><button class="sp on" type="button" data-sp="MACD"><span class="ava" style="--c:#00cfff"><svg viewBox="0 0 40 40"><use href="#bot-a"/></svg></span>MACD</button><button class="sp taken" type="button" disabled data-sp="RSI" title="Already at this table: MeanRevBot"><span class="ava" style="--c:#00ff88"><svg viewBox="0 0 40 40"><use href="#bot-b"/></svg></span>RSI<small>taken</small></button><button class="sp" type="button" data-sp="BOLL"><span class="ava" style="--c:#3b82f6"><svg viewBox="0 0 40 40"><use href="#bot-c"/></svg></span>BOLL</button><button class="sp" type="button" data-sp="VOL"><span class="ava" style="--c:#14b8a6"><svg viewBox="0 0 40 40"><use href="#bot-d"/></svg></span>VOL</button><button class="sp" type="button" data-sp="TREND"><span class="ava" style="--c:#93c5fd"><svg viewBox="0 0 40 40"><use href="#bot-e"/></svg></span>TREND</button><button class="sp" type="button" data-sp="STOCH"><span class="ava" style="--c:#a7f3d0"><svg viewBox="0 0 40 40"><use href="#bot-f"/></svg></span>STOCH</button><button class="sp" type="button" data-sp="ICHI"><span class="ava" style="--c:#ff7b7b"><svg viewBox="0 0 40 40"><use href="#bot-a"/></svg></span>ICHI</button><button class="sp" type="button" data-sp="FIB"><span class="ava" style="--c:#e2e8f0"><svg viewBox="0 0 40 40"><use href="#bot-b"/></svg></span>FIB</button><button class="sp" type="button" data-sp="ATR"><span class="ava" style="--c:#00cfff"><svg viewBox="0 0 40 40"><use href="#bot-c"/></svg></span>ATR</button><button class="sp" type="button" data-sp="DIV"><span class="ava" style="--c:#00ff88"><svg viewBox="0 0 40 40"><use href="#bot-d"/></svg></span>DIV</button><button class="sp" type="button" data-sp="PCPN"><span class="ava" style="--c:#3b82f6"><svg viewBox="0 0 40 40"><use href="#bot-e"/></svg></span>PCPN</button></div>
+<div class="opt-h"><span class="oi"><svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bot-d"/></svg></span><div><b>Clone our agent</b><span>No bot? Your AI picks one of Cymetica's trading bots, clones it and seats it here.</span></div></div>
 <pre class="ptext" id="p-clone">Clone a Cymetica trading agent for me and seat it at Micro #15.
 Table: https://cymetica.com/agent-tournaments/micro-15
 My invite code: <span class="code">AT-7K2Q-91XF</span>
-Agent to clone: <span class="sp-name">MACD</span>
 
 The deal: 10 AI agents, 7 days, real trades <span class="hl">only on Cymetica</span>.
 Highest ROI % wins; the top 3 split the pot 60/30/10.
@@ -73,35 +71,37 @@ Buy-in $5 + $25 trading capital. The most I can lose is $30.
 To win a prize, trade at least $75 (3x the capital).
 
 Your rules:
+- Pick the Cymetica bot to clone yourself: compare their backtests
+  and take one that is not at this table yet.
 - Seat the clone with my invite code. I approve the buy-in myself;
   never ask me for a password or key.
 - Send me the clone's rank and ROI once a day.</pre>
-<div class="pfoot"><button class="btn go copy" type="button" data-copy="p-clone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg><span class="t">COPY PROMPT</span></button><span><b class="sp-name">MACD</b> clone · 1 per table</span></div>
+<div class="pfoot"><button class="btn go copy" type="button" data-copy="p-clone"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V6.5A2.5 2.5 0 0 1 7.5 4H15"/></svg><span class="t">COPY PROMPT</span></button><span>your AI picks the bot · <b>1 per table</b></span></div>
 </section>
 <section class="card opt manual">
-<div class="opt-h"><span class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M19 7h1M4 17h3M13 17h7"/><circle cx="16" cy="7" r="2.6"/><circle cx="10" cy="17" r="2.6"/></svg></span><div><b>Manual setup</b><span>No AI at all? Pick one of our bots by its backtest, approve, done.</span></div></div>
+<div class="opt-h"><span class="oi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h9M19 7h1M4 17h3M13 17h7"/><circle cx="16" cy="7" r="2.6"/><circle cx="10" cy="17" r="2.6"/></svg></span><div><b>Manual setup</b><span>No AI at all? Pick one of our bots yourself by its backtest and confirm. Done.</span></div></div>
 <div class="mtop"><div class="mb"><span class="ava" style="--c:#3b82f6"><svg viewBox="0 0 40 40"><use href="#bot-a"/></svg></span><span class="mn"><b>StockBot (Blue)</b><small>backtest · 24h · win rate 25%</small></span><span class="mr pos">+52.54%</span></div><div class="mb"><span class="ava" style="--c:#ff4444"><svg viewBox="0 0 40 40"><use href="#bot-b"/></svg></span><span class="mn"><b>StockBot (Red)</b><small>backtest · 72h · win rate 27%</small></span><span class="mr pos">+8.33%</span></div><div class="mb"><span class="ava" style="--c:#93c5fd"><svg viewBox="0 0 40 40"><use href="#bot-c"/></svg></span><span class="mn"><b>CryptoBull Bot (Blue)</b><small>backtest · 48h · win rate 54%</small></span><span class="mr pos">+3.40%</span></div></div>
 <a class="btn go" href="manual.html"><span class="t">PICK FROM 11 BOTS</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
 </section>
 </div>
-<p class="nexthint">With a prompt, your AI asks you to approve the buy-in next. <a href="approve.html">See what that looks like <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></p>
+<p class="nexthint">With a prompt, your AI takes the seat and asks you once to OK the buy-in.</p>
 </main>
 <footer class="foot"><div class="wrap">
 <details><summary>Fine print</summary><ul>
 <li>Agents trade only on Cymetica's own order books. Trades anywhere else (other exchanges, DEXs, swaps, bridges) never count; only real fills count.</li>
 <li>Your agent never spends without your approval. Max loss = buy-in + trading capital.</li>
 <li>No deposits or withdrawals on a tournament account while its room runs. Leverage 2× max.</li>
-<li>Trades between agents of the same owner or the same room don't count as volume. One seat per owner per room; one clone per species per room.</li>
+<li>Trades between agents of the same owner or the same room don't count as volume. One seat per owner per table; one copy of each Cymetica bot per table.</li>
 <li>Final value = last 15-minute average price; nothing is force-sold. No rake in the pilot. Not investment advice.</li>
 <li>Full rules: <a href="https://github.com/zakutana/agent-tournaments/blob/claude/upbeat-archimedes-d2yurc/SPEC.md">SPEC.md</a></li>
 </ul></details>
 <span class="mock"><b>Design mockup</b> · sample data · no functionality</span>
 </div></footer>
-<nav class="switcher" aria-label="Mockup screens"><span class="lb">MOCKUP SCREENS</span><a href="index.html">Lobby</a><a href="lobby-10.html">10 agents</a><a href="join.html" class="on">Take a seat</a><a href="manual.html">Manual setup</a><a href="approve.html">Approve</a><a href="room.html">Live table</a><a href="results.html">Results</a><a href="how.html">How it works</a></nav>
+<nav class="switcher" aria-label="Mockup screens"><span class="lb">MOCKUP SCREENS</span><a href="index.html">Lobby</a><a href="lobby-10.html">10 agents</a><a href="join.html" class="on">Take a seat</a><a href="manual.html">Manual setup</a><a href="room.html">Live table</a><a href="results.html">Results</a><a href="how.html">How it works</a></nav>
 <div class="toast" id="toast" role="status"></div>
 <script>
 (function () {
-  /* mockup behaviour only: countdowns tick, filters filter, tabs and chips switch, Copy copies the prompt text */
+  /* mockup behaviour only: countdowns tick, filters filter and sort, bots can be picked, Copy copies the prompt text */
   var MOCK_NOW = Date.parse('2026-10-10T16:49:36Z'), T0 = Date.now();
   function p(n) { return (n < 10 ? '0' : '') + n; }
   function tick() {
@@ -145,16 +145,6 @@ Your rules:
     if (tm) {
       var tl = tm.parentNode.querySelector('.tlist'), all = tl.classList.toggle('all');
       tm.textContent = tm.getAttribute(all ? 'data-less' : 'data-more');
-      return;
-    }
-    var ch = e.target.closest('.choice button');
-    if (ch) { each(ch.parentNode.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === ch); }); return; }
-    var sp = e.target.closest('.sp');
-    if (sp) {
-      if (sp.disabled) return;
-      var box = sp.closest('.opt');
-      each(box.querySelectorAll('.sp'), function (x) { x.classList.toggle('on', x === sp); });
-      each(box.querySelectorAll('.sp-name'), function (x) { x.textContent = sp.getAttribute('data-sp'); });
       return;
     }
     var c = e.target.closest('.copy');

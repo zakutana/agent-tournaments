@@ -58,17 +58,17 @@
 <li>Agents trade only on Cymetica's own order books. Trades anywhere else (other exchanges, DEXs, swaps, bridges) never count; only real fills count.</li>
 <li>Your agent never spends without your approval. Max loss = buy-in + trading capital.</li>
 <li>No deposits or withdrawals on a tournament account while its room runs. Leverage 2× max.</li>
-<li>Trades between agents of the same owner or the same room don't count as volume. One seat per owner per room; one clone per species per room.</li>
+<li>Trades between agents of the same owner or the same room don't count as volume. One seat per owner per table; one copy of each Cymetica bot per table.</li>
 <li>Final value = last 15-minute average price; nothing is force-sold. No rake in the pilot. Not investment advice.</li>
 <li>Full rules: <a href="https://github.com/zakutana/agent-tournaments/blob/claude/upbeat-archimedes-d2yurc/SPEC.md">SPEC.md</a></li>
 </ul></details>
 <span class="mock"><b>Design mockup</b> · sample data · no functionality</span>
 </div></footer>
-<nav class="switcher" aria-label="Mockup screens"><span class="lb">MOCKUP SCREENS</span><a href="index.html">Lobby</a><a href="lobby-10.html">10 agents</a><a href="join.html">Take a seat</a><a href="manual.html">Manual setup</a><a href="approve.html">Approve</a><a href="room.html" class="on">Live table</a><a href="results.html">Results</a><a href="how.html">How it works</a></nav>
+<nav class="switcher" aria-label="Mockup screens"><span class="lb">MOCKUP SCREENS</span><a href="index.html">Lobby</a><a href="lobby-10.html">10 agents</a><a href="join.html">Take a seat</a><a href="manual.html">Manual setup</a><a href="room.html" class="on">Live table</a><a href="results.html">Results</a><a href="how.html">How it works</a></nav>
 <div class="toast" id="toast" role="status"></div>
 <script>
 (function () {
-  /* mockup behaviour only: countdowns tick, filters filter, tabs and chips switch, Copy copies the prompt text */
+  /* mockup behaviour only: countdowns tick, filters filter and sort, bots can be picked, Copy copies the prompt text */
   var MOCK_NOW = Date.parse('2026-10-10T16:49:36Z'), T0 = Date.now();
   function p(n) { return (n < 10 ? '0' : '') + n; }
   function tick() {
@@ -112,16 +112,6 @@
     if (tm) {
       var tl = tm.parentNode.querySelector('.tlist'), all = tl.classList.toggle('all');
       tm.textContent = tm.getAttribute(all ? 'data-less' : 'data-more');
-      return;
-    }
-    var ch = e.target.closest('.choice button');
-    if (ch) { each(ch.parentNode.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === ch); }); return; }
-    var sp = e.target.closest('.sp');
-    if (sp) {
-      if (sp.disabled) return;
-      var box = sp.closest('.opt');
-      each(box.querySelectorAll('.sp'), function (x) { x.classList.toggle('on', x === sp); });
-      each(box.querySelectorAll('.sp-name'), function (x) { x.textContent = sp.getAttribute('data-sp'); });
       return;
     }
     var c = e.target.closest('.copy');

@@ -324,10 +324,6 @@ button{font-family:inherit}
 .cost small{display:block; font:500 12px var(--ui); color:var(--muted)}
 .cost.max{background:linear-gradient(90deg, rgba(0,255,136,.14), rgba(0,255,136,.03)); border-color:rgba(0,255,136,.4); color:#fff}
 .cost.max b{color:var(--green); font-size:22px}
-.choice{display:flex; gap:8px; margin:14px 0}
-.choice button{flex:1; appearance:none; cursor:pointer; text-align:center; padding:10px 8px; border-radius:12px; font:700 13px var(--ui); color:var(--ink-2); border:1px solid var(--line); background:none}
-.choice button:hover{color:#fff}
-.choice button.on{color:#fff; border-color:var(--cyan); background:var(--cyan-soft)}
 .approve .btns{display:flex; gap:10px}
 .approve .btns .btn{flex:1; font-size:14px; padding:15px}
 .stakes{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px}
@@ -368,21 +364,11 @@ a.seat{text-decoration:none}
 .opt-h b{display:block; font:800 20px var(--display); color:#fff; letter-spacing:-.01em}
 .opt-h div > span{font:500 14px/1.45 var(--ui); color:var(--ink-2)}
 .opt .ptext{margin:0; max-height:380px}
-.species{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px}
-.sp{appearance:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:6px; padding:10px 4px 9px; border-radius:14px;
-  background:rgba(7,11,18,.6); border:1px solid var(--line-2); color:var(--ink); font:800 11.5px var(--display); letter-spacing:.02em}
-.sp .ava{width:34px; height:34px}
-.sp:hover{border-color:rgba(0,255,136,.5)}
-.sp.on{border-color:var(--green); background:linear-gradient(180deg, rgba(0,255,136,.18), rgba(7,11,18,.6)); box-shadow:0 0 22px -10px rgba(0,255,136,.9)}
-.sp.taken{opacity:.38; cursor:not-allowed}
-.sp small{font:700 8.5px var(--num); letter-spacing:.12em; color:var(--muted); text-transform:uppercase; margin-top:-3px}
 .nexthint{margin:20px 0 0; text-align:center; font:600 14.5px var(--ui); color:var(--ink-2)}
 .nexthint a{display:inline-flex; align-items:center; gap:6px; color:var(--cyan); text-decoration:none; font-weight:700}
 .nexthint a svg{width:16px; height:16px}
 
 /* ---------- approve ---------- */
-.apwrap{max-width:620px; margin:0 auto; padding:28px 0 0}
-.aptop{display:flex; align-items:center; gap:14px; margin-bottom:16px}
 .approve .table{margin:2px 10px 16px}
 .bal{margin:4px 0 14px; font:600 13px var(--num); color:var(--ink-2)}
 .bal b{color:#fff}
@@ -452,7 +438,7 @@ a.seat{text-decoration:none}
 .race .legend i.tmark{width:10px; height:10px; border-radius:50%; background:#0a0e17; box-shadow:inset 0 0 0 2px #E6EDF7}
 
 /* ---------- manual setup: pick a bot by its backtest ---------- */
-.opts{grid-template-areas:"own clone" "manual clone"}
+.opts{grid-template-areas:"own clone" "manual manual"}
 .opt.own{grid-area:own} .opt.clone{grid-area:clone} .opt.manual{grid-area:manual}
 .opt.manual .opt-h .oi{color:var(--ink); background:rgba(169,184,204,.12); box-shadow:inset 0 0 0 1px rgba(169,184,204,.4)}
 .mtop{display:flex; flex-direction:column; gap:6px}
@@ -462,7 +448,9 @@ a.seat{text-decoration:none}
 .mb .mn b{display:block; font:700 14px var(--ui); color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .mb .mn small{font:600 11px var(--num); color:var(--muted); white-space:nowrap}
 .mb .mr{font:800 18px var(--display); white-space:nowrap}
-.opt.manual > .btn{align-self:flex-start}
+.opt.manual{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.3fr); grid-template-areas:"hd list" "go list"; gap:16px 28px; align-items:start}
+.opt.manual .opt-h{grid-area:hd} .opt.manual .mtop{grid-area:list}
+.opt.manual > .btn{grid-area:go; align-self:end; justify-self:start}
 .mgrid{display:grid; grid-template-columns:minmax(0,1fr) 390px; gap:22px; align-items:start}
 .mhead{margin-top:6px}
 .mtools{display:flex; gap:10px; flex-wrap:wrap}
@@ -576,6 +564,7 @@ body.has-switcher{padding-bottom:78px}
   .hero{grid-template-columns:1fr; padding-top:34px}
   .flow4{grid-template-columns:repeat(2,minmax(0,1fr))}
   .send2, .stakes, .faq3, .opts{grid-template-columns:1fr}
+  .opts{grid-template-areas:"own" "clone" "manual"}
 }
 @media (max-width:700px){
   .bar .wrap{height:58px; gap:10px}
@@ -619,13 +608,10 @@ body.has-switcher{padding-bottom:78px}
   .stake{grid-template-columns:1fr; padding:20px}
   .stake .chip{grid-row:auto; width:64px; height:64px}
   .stake .big{font-size:32px}
-  .choice{flex-direction:column}
-  .species{grid-template-columns:repeat(4,minmax(0,1fr))}
   .switcher{bottom:8px}
   .switcher .lb{display:none}
   .pot .v.name{font-size:25px}
   .pot .s2{display:none}
-  .apwrap{padding-top:16px}
 }
 @media (max-width:1100px){
   .wf{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -633,7 +619,6 @@ body.has-switcher{padding-bottom:78px}
   .wf .w.now{grid-column:1 / -1}
   .trgrid, .mgrid{grid-template-columns:1fr}
   .mside{position:static}
-  .opts{grid-template-areas:none} .opt.own, .opt.clone, .opt.manual{grid-area:auto}
   .arh, .ar{grid-template-columns:40px minmax(0,1fr) 160px 56px 100px 150px 20px; gap:12px}
   .arh span:nth-child(7), .arh span:nth-child(8), .ar .wn, .ar .en{display:none}
 }
@@ -647,7 +632,8 @@ body.has-switcher{padding-bottom:78px}
   .trow .val small{display:none}
   .wf .w{padding:12px}
   .wf .w b{font-size:19px} .wf .w.now b{font-size:24px}
-  .opt.manual > .btn{align-self:stretch}
+  .opt.manual{grid-template-columns:1fr; grid-template-areas:"hd" "list" "go"}
+  .opt.manual > .btn{justify-self:stretch}
   .bot{grid-template-columns:20px 38px minmax(0,1fr) auto; grid-template-areas:"rd av bn br" "bs bs bs bs"; padding:12px; gap:8px 10px}
   .bot > .ava{width:38px; height:38px}
   .bspark{display:none}

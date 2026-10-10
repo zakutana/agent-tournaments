@@ -5,8 +5,7 @@ Writes, next to this file:
   index.html    Lobby: your agent, every table as a poker table with 10 seats, top agents
   lobby-10.html The Lobby when you run 10 agents at 10 tables: totals, one row per seat, your tables
   join.html     Take a seat: an open table and 3 ways in (your own agent / clone ours / manual setup)
-  manual.html   Manual setup: pick one of Cymetica's bots by its backtest and approve, on one screen
-  approve.html  The owner's one-click approval of the buy-in
+  manual.html   Manual setup: pick one of Cymetica's bots by its backtest and confirm, on one screen
   room.html     A live table: pot, countdown, your agent, leaderboard, your trades, the race
   results.html  A finished table: winner, payouts, your result, your trades, final standings
   how.html      How it works: 4 steps, stakes, quick answers
@@ -91,10 +90,6 @@ YOU_TAG = ' <span class="tag you">YOU</span>'
 INVITE = "AT-7K2Q-91XF"
 MINE = {YOU}   # the agents drawn as "yours" (the 10-agent sample widens it)
 
-# Cymetica's cloneable trading-agent species (GET /api/v1/cloned-bots/available). One clone per species per table.
-SPECIES = ["MACD", "RSI", "BOLL", "VOL", "TREND", "STOCH", "ICHI", "FIB", "ATR", "DIV", "PCPN"]
-SPECIES_LOOK = ["#00cfff", "#00ff88", "#3b82f6", "#14b8a6", "#93c5fd", "#a7f3d0", "#ff7b7b", "#e2e8f0"]
-
 # Micro #14, day 4 of 7 (live): (rank, agent, ROI %, volume $, volume state, prize)
 BOARD = [
     (1, "QuantKoala", 12.31, 142, "ok", 30),
@@ -129,7 +124,6 @@ MICRO13_SEATS = ["SigmaFox", "QuantKoala", "MeanRevBot", "TrendTurtle", "AlphaWo
 # Micro #15, open: three free seats at the front of the table
 MICRO15_SEATS = ["GridRunner", "VolSniper", "NorthStar-LLM", None, None, None,
                  "SigmaFox", "MeanRevBot", "OrderBookOwl", "Lynx-2"]
-MICRO15_TAKEN_SPECIES = {"RSI": "MeanRevBot"}
 
 ROOMS = [
     dict(id="micro-14", name="Micro #14", tier="micro", buyin=5, state="live", pot=50, end="2026-10-13T18:00:00Z",
@@ -248,14 +242,15 @@ def prompt_own(room_id="micro-15", room="Micro #15"):
         "- Send me your rank and ROI once a day.")
 
 
-def prompt_clone(room_id="micro-15", room="Micro #15", species="MACD"):
+def prompt_clone(room_id="micro-15", room="Micro #15"):
     return (
         f"Clone a Cymetica trading agent for me and seat it at {room}.\n"
         f"Table: https://cymetica.com/agent-tournaments/{room_id}\n"
-        f"My invite code: <span class=\"code\">{INVITE}</span>\n"
-        f"Agent to clone: <span class=\"sp-name\">{species}</span>\n\n"
+        f"My invite code: <span class=\"code\">{INVITE}</span>\n\n"
         + _deal() +
         "Your rules:\n"
+        "- Pick the Cymetica bot to clone yourself: compare their backtests\n"
+        "  and take one that is not at this table yet.\n"
         "- Seat the clone with my invite code. I approve the buy-in myself;\n"
         "  never ask me for a password or key.\n"
         "- Send me the clone's rank and ROI once a day.")
@@ -277,11 +272,6 @@ def ava(name, extra=""):
     cls = "ava you" if name in MINE else "ava"
     return (f'<span class="{cls}{extra}" style="--c:{col}" title="{name}">'
             f'<svg viewBox="0 0 40 40"><use href="#bot-{head}"/></svg></span>')
-
-
-def species_ava(i):
-    col = SPECIES_LOOK[i % len(SPECIES_LOOK)]
-    return f'<span class="ava" style="--c:{col}"><svg viewBox="0 0 40 40"><use href="#bot-{"abcdef"[i % 6]}"/></svg></span>'
 
 
 def remaining(end):
@@ -462,7 +452,7 @@ def footer():
 <li>Agents trade only on Cymetica's own order books. Trades anywhere else (other exchanges, DEXs, swaps, bridges) never count; only real fills count.</li>
 <li>Your agent never spends without your approval. Max loss = buy-in + trading capital.</li>
 <li>No deposits or withdrawals on a tournament account while its room runs. Leverage 2× max.</li>
-<li>Trades between agents of the same owner or the same room don't count as volume. One seat per owner per room; one clone per species per room.</li>
+<li>Trades between agents of the same owner or the same room don't count as volume. One seat per owner per table; one copy of each Cymetica bot per table.</li>
 <li>Final value = last 15-minute average price; nothing is force-sold. No rake in the pilot. Not investment advice.</li>
 <li>Full rules: <a href="{SPEC_URL}">SPEC.md</a></li>
 </ul></details>
@@ -675,13 +665,6 @@ def join():
 <div class="cost"><span>Min volume<small>3× the capital, to take a prize</small></span><b>$75</b></div>
 </div></section>
 </aside>"""
-    chips = []
-    for i, sp in enumerate(SPECIES):
-        if sp in MICRO15_TAKEN_SPECIES:
-            chips.append(f'<button class="sp taken" type="button" disabled data-sp="{sp}" title="Already at this table: {MICRO15_TAKEN_SPECIES[sp]}">'
-                         f'{species_ava(i)}{sp}<small>taken</small></button>')
-        else:
-            chips.append(f'<button class="sp{" on" if sp == "MACD" else ""}" type="button" data-sp="{sp}">{species_ava(i)}{sp}</button>')
     bot_icon = '<svg viewBox="0 0 40 40" aria-hidden="true"><use href="#bot-d"/></svg>'
     top3 = "".join(f'<div class="mb">{bot_ava(i)}<span class="mn"><b>{BOTS[i][0]}</b><small>backtest · {BOTS[i][4].split(" / ")[0]}'
                    f' · win rate {BOTS[i][5] * 100:.0f}%</small></span><span class="mr {roi_cls(BOTS[i][3])}">{fmt_roi(BOTS[i][3])}</span></div>'
@@ -694,44 +677,20 @@ def join():
 <div class="pfoot"><button class="btn go copy" type="button" data-copy="p-own">{I["copy"]}<span class="t">COPY PROMPT</span></button><span>invite <b>{INVITE}</b> · 24h</span></div>
 </section>
 <section class="card opt clone">
-<div class="opt-h"><span class="oi">{bot_icon}</span><div><b>Clone our agent</b><span>No bot? Your AI clones a Cymetica trading agent into this seat. Pick one:</span></div></div>
-<div class="species">{"".join(chips)}</div>
+<div class="opt-h"><span class="oi">{bot_icon}</span><div><b>Clone our agent</b><span>No bot? Your AI picks one of Cymetica's trading bots, clones it and seats it here.</span></div></div>
 <pre class="ptext" id="p-clone">{prompt_clone()}</pre>
-<div class="pfoot"><button class="btn go copy" type="button" data-copy="p-clone">{I["copy"]}<span class="t">COPY PROMPT</span></button><span><b class="sp-name">MACD</b> clone · 1 per table</span></div>
+<div class="pfoot"><button class="btn go copy" type="button" data-copy="p-clone">{I["copy"]}<span class="t">COPY PROMPT</span></button><span>your AI picks the bot · <b>1 per table</b></span></div>
 </section>
 <section class="card opt manual">
-<div class="opt-h"><span class="oi">{I["sliders"]}</span><div><b>Manual setup</b><span>No AI at all? Pick one of our bots by its backtest, approve, done.</span></div></div>
+<div class="opt-h"><span class="oi">{I["sliders"]}</span><div><b>Manual setup</b><span>No AI at all? Pick one of our bots yourself by its backtest and confirm. Done.</span></div></div>
 <div class="mtop">{top3}</div>
 <a class="btn go" href="manual.html"><span class="t">PICK FROM {len(BOTS)} BOTS</span>{I["right"]}</a>
 </section>
 </div>
-<p class="nexthint">With a prompt, your AI asks you to approve the buy-in next. <a href="approve.html">See what that looks like {I["right"]}</a></p>"""
+<p class="nexthint">With a prompt, your AI takes the seat and asks you once to OK the buy-in.</p>"""
     main = (rhead("Micro #15", 5, '<span class="st open">Open · 3 seats left</span>',
                   "<b>7/10</b> seated · starts when full")
             + f'<div class="rgrid">{big_table("".join(seats), center, live=False)}{deal}</div>' + opts)
-    return "lobby", main
-
-
-def approve():
-    seats = list(MICRO15_SEATS)
-    seats[3] = YOU
-    center = '<span class="k">POT</span><span class="v">$40</span><span class="s">WITH YOU · 2 LEFT</span>'
-    main = f"""<div class="apwrap">
-<div class="aptop"><a class="back" href="join.html" aria-label="Back">{I["left"]}</a><span class="kick"><i class="dot"></i>1 click and you're in</span></div>
-<section class="card approve">
-<div class="ask">{ava(YOU)}<div><b>{YOU} wants a seat</b><span>MICRO #15 · SEAT 4 · STARTS WHEN FULL</span></div></div>
-{mini_table(seats, center, pending=True)}
-<div class="costs">
-<div class="cost"><span>Buy-in<small>goes to the pot</small></span><b>$5</b></div>
-<div class="cost"><span>Trading capital<small>yours, back after 7 days ± P&amp;L</small></span><b>$25</b></div>
-<div class="cost max"><span>Max you can lose</span><b>$30</b></div>
-</div>
-<div class="choice" role="group" aria-label="Approve"><button class="on" type="button">Just this one</button><button type="button">Auto up to $30 / mo</button><button type="button">Auto up to $100 / mo</button></div>
-<p class="bal">From your balance: <b>$142.50 USDC</b></p>
-<div class="btns"><a class="btn go" href="index.html" data-toast="Approved · {YOU} took seat 4 at Micro #15">APPROVE $30</a><a class="btn no" href="join.html">NOPE</a></div>
-<p class="fine">Approving takes the seat at once. Your capital comes back after the room, with the P&amp;L.</p>
-</section>
-</div>"""
     return "lobby", main
 
 
@@ -1081,7 +1040,7 @@ def rooms10():
             pending = s["state"] == "approve"
             opened.append(dict(id=rid, name=s["room"], tier=s["tier"], buyin=buyin, state="open", pot=buyin * s["taken"],
                                seats=seats, mine=True, me=s["agent"], pending=pending,
-                               href="approve.html" if pending else "join.html"))
+                               href="join.html"))
     done = []
     for o in OTHERS10:
         r = dict(o)
@@ -1138,10 +1097,11 @@ def agent_rows():
                        f'<span class="t{" ok" if ok else ""}">{vt}</span></div>{win}'
                        f'<span class="en" data-end="{s["end"]}">{short_left(s["end"])}</span><span class="arr">{I["right"]}</span></a>')
         elif s["state"] == "approve":
-            out.append(f'<a class="ar need" href="approve.html" data-tags="wait">{ava(name)}{nm}'
+            out.append(f'<div class="ar need" data-tags="wait">{ava(name)}{nm}'
                        f'<div class="tb"><b>{chip}{s["room"]}</b><small class="need">SEAT {s["seat"]} · STARTS WHEN FULL</small></div>'
                        f'<span class="ask2"><span><b>Wants a seat.</b> Max loss ${loss_of(tier)}, your OK?</span>'
-                       f'<span class="btn go sm">APPROVE ${loss_of(tier)}</span></span></a>')
+                       f'<button class="btn go sm" type="button" data-toast="Approved · {name} took seat {s["seat"]} at {s["room"]}">'
+                       f'APPROVE ${loss_of(tier)}</button></span></div>')
         else:
             out.append(f'<a class="ar wait" href="join.html" data-tags="wait">{ava(name)}{nm}'
                        f'<div class="tb"><b>{chip}{s["room"]}</b><small>SEAT {s["seat"]} · WAITING</small></div>'
@@ -1197,7 +1157,6 @@ SCREENS = [  # route, file, title, builder, switcher label
     ("lobby10", "lobby-10.html", "Your 10 agents · Agent Tournaments", lobby10, "10 agents"),
     ("join", "join.html", "Micro #15 · take a seat · Agent Tournaments", join, "Take a seat"),
     ("manual", "manual.html", "Micro #15 · manual setup · Agent Tournaments", manual, "Manual setup"),
-    ("approve", "approve.html", "Approve · Agent Tournaments", approve, "Approve"),
     ("room", "room.html", "Micro #14 · live · Agent Tournaments", room, "Live table"),
     ("results", "results.html", "Micro #13 · results · Agent Tournaments", results, "Results"),
     ("how", "how.html", "How it works · Agent Tournaments", how, "How it works"),
@@ -1205,7 +1164,7 @@ SCREENS = [  # route, file, title, builder, switcher label
 ROUTE_OF = {fname: route for route, fname, *_ in SCREENS}
 
 SCRIPT = """(function () {
-  /* mockup behaviour only: countdowns tick, filters filter, tabs and chips switch, Copy copies the prompt text */
+  /* mockup behaviour only: countdowns tick, filters filter and sort, bots can be picked, Copy copies the prompt text */
   var MOCK_NOW = Date.parse('%s'), T0 = Date.now();
   function p(n) { return (n < 10 ? '0' : '') + n; }
   function tick() {
@@ -1249,16 +1208,6 @@ SCRIPT = """(function () {
     if (tm) {
       var tl = tm.parentNode.querySelector('.tlist'), all = tl.classList.toggle('all');
       tm.textContent = tm.getAttribute(all ? 'data-less' : 'data-more');
-      return;
-    }
-    var ch = e.target.closest('.choice button');
-    if (ch) { each(ch.parentNode.querySelectorAll('button'), function (x) { x.classList.toggle('on', x === ch); }); return; }
-    var sp = e.target.closest('.sp');
-    if (sp) {
-      if (sp.disabled) return;
-      var box = sp.closest('.opt');
-      each(box.querySelectorAll('.sp'), function (x) { x.classList.toggle('on', x === sp); });
-      each(box.querySelectorAll('.sp-name'), function (x) { x.textContent = sp.getAttribute('data-sp'); });
       return;
     }
     var c = e.target.closest('.copy');
@@ -1339,7 +1288,7 @@ def build():
         LOGO.replace('aria-hidden="true"', 'xmlns="http://www.w3.org/2000/svg" width="48" height="48"').replace(
             "<circle", '<defs><linearGradient id="g-brand" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00cfff"/>'
             '<stop offset="1" stop-color="#00ff88"/></linearGradient></defs><circle', 1) + "\n", encoding="utf-8")
-    for old in ("send.html",):                       # screens that no longer exist
+    for old in ("send.html", "approve.html"):        # screens that no longer exist
         if (HERE / old).exists():
             (HERE / old).unlink()
     bodies = []

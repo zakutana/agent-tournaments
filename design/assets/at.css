@@ -17,6 +17,7 @@
   --ui:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
   --num:"JetBrains Mono",ui-monospace,monospace;
   --w:1240px; --pad:clamp(16px,3vw,28px);
+  --t:#00cfff;   /* table colour: cyan for $5 tables, green for $50 (set per card) */
 }
 
 *{box-sizing:border-box}
@@ -73,18 +74,6 @@ button{font-family:inherit}
   background:linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent); animation:shine 3.6s ease-in-out infinite}
 @keyframes shine{0%,55%{left:-40%} 100%{left:130%}}
 .btn.xl svg{width:20px; height:20px}
-
-/* ---------- ticker ---------- */
-.ticker{height:38px; overflow:hidden; border-bottom:1px solid var(--line); background:rgba(7,11,18,.72);
-  -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent); mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
-.track{display:flex; width:max-content; gap:36px; align-items:center; height:100%; padding-left:36px; animation:marquee 70s linear infinite}
-.ticker:hover .track{animation-play-state:paused}
-@keyframes marquee{to{transform:translateX(-50%)}}
-.tk{display:inline-flex; align-items:center; gap:8px; font:500 12.5px var(--num); color:var(--ink-2); white-space:nowrap}
-.tk b{color:#fff; font-weight:700}
-.tk svg{width:14px; height:14px; flex:none}
-.tk .tag{font-size:9px}
-@media (prefers-reduced-motion:reduce){.btn.go.xl::after{animation:none; display:none} .track{animation:none} .dot{animation:none} .seat.you::after{animation:none} .felt.live{animation:none}}
 
 /* ---------- small parts ---------- */
 .tag{display:inline-flex; align-items:center; font:800 9.5px/1 var(--display); letter-spacing:.08em; padding:4px 6px; border-radius:6px; white-space:nowrap}
@@ -336,8 +325,9 @@ button{font-family:inherit}
 .cost.max{background:linear-gradient(90deg, rgba(0,255,136,.14), rgba(0,255,136,.03)); border-color:rgba(0,255,136,.4); color:#fff}
 .cost.max b{color:var(--green); font-size:22px}
 .choice{display:flex; gap:8px; margin:14px 0}
-.choice span{flex:1; text-align:center; padding:10px; border-radius:12px; font:700 13px var(--ui); color:var(--ink-2); border:1px solid var(--line)}
-.choice span.on{color:#fff; border-color:var(--cyan); background:var(--cyan-soft)}
+.choice button{flex:1; appearance:none; cursor:pointer; text-align:center; padding:10px 8px; border-radius:12px; font:700 13px var(--ui); color:var(--ink-2); border:1px solid var(--line); background:none}
+.choice button:hover{color:#fff}
+.choice button.on{color:#fff; border-color:var(--cyan); background:var(--cyan-soft)}
 .approve .btns{display:flex; gap:10px}
 .approve .btns .btn{flex:1; font-size:14px; padding:15px}
 .stakes{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px}
@@ -356,6 +346,70 @@ button{font-family:inherit}
 .q span{font:500 14px/1.45 var(--ui); color:var(--ink-2)}
 .forbots{margin-top:26px; text-align:center; font:500 12.5px var(--num); color:var(--muted)}
 .forbots code{color:var(--ink-2); background:var(--sunk); border:1px solid var(--line-2); padding:2px 7px; border-radius:7px}
+
+/* ---------- take a seat ---------- */
+.nobot{margin:16px 0 0; font:600 14px var(--ui); color:var(--ink-2)}
+.nobot b{color:var(--green)}
+.pot .s2{font:600 10.5px var(--num); color:var(--muted); letter-spacing:.08em; margin-top:2px}
+.pot .v.name{font-size:46px; color:#fff; text-shadow:0 0 26px rgba(0,255,136,.35)}
+a.seat{text-decoration:none}
+.seat.empty.open .ava{border:1.5px dashed rgba(0,207,255,.85); color:var(--cyan); background:rgba(0,207,255,.08); box-shadow:0 0 16px -4px rgba(0,207,255,.7); animation:seatglow 2s ease-in-out infinite}
+.seat.empty.open .ava::before{font-size:22px}
+.seat.empty.open:hover .ava{background:rgba(0,207,255,.2)}
+@keyframes seatglow{50%{box-shadow:0 0 26px 2px rgba(0,207,255,.85)}}
+.seat.dim{opacity:.42}
+.cost.win b{color:var(--green)}
+.opts{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px; align-items:start}
+.opt{display:flex; flex-direction:column; gap:14px}
+.opt.clone{border-color:rgba(0,255,136,.38); box-shadow:0 30px 80px -50px rgba(0,255,136,.6)}
+.opt-h{display:flex; gap:14px; align-items:center}
+.opt-h .oi{width:54px; height:54px; border-radius:16px; display:grid; place-items:center; flex:none; color:var(--cyan); background:var(--cyan-soft); box-shadow:inset 0 0 0 1px rgba(0,207,255,.45)}
+.opt-h .oi svg{width:28px; height:28px}
+.opt.clone .opt-h .oi{color:var(--green); background:var(--green-soft); box-shadow:inset 0 0 0 1px rgba(0,255,136,.45)}
+.opt.clone .opt-h .oi svg{width:40px; height:40px}
+.opt-h b{display:block; font:800 20px var(--display); color:#fff; letter-spacing:-.01em}
+.opt-h div > span{font:500 14px/1.45 var(--ui); color:var(--ink-2)}
+.opt .ptext{margin:0; max-height:212px}
+.species{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px}
+.sp{appearance:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:6px; padding:10px 4px 9px; border-radius:14px;
+  background:rgba(7,11,18,.6); border:1px solid var(--line-2); color:var(--ink); font:800 11.5px var(--display); letter-spacing:.02em}
+.sp .ava{width:34px; height:34px}
+.sp:hover{border-color:rgba(0,255,136,.5)}
+.sp.on{border-color:var(--green); background:linear-gradient(180deg, rgba(0,255,136,.18), rgba(7,11,18,.6)); box-shadow:0 0 22px -10px rgba(0,255,136,.9)}
+.sp.taken{opacity:.38; cursor:not-allowed}
+.sp small{font:700 8.5px var(--num); letter-spacing:.12em; color:var(--muted); text-transform:uppercase; margin-top:-3px}
+.nexthint{margin:20px 0 0; text-align:center; font:600 14.5px var(--ui); color:var(--ink-2)}
+.nexthint a{display:inline-flex; align-items:center; gap:6px; color:var(--cyan); text-decoration:none; font-weight:700}
+.nexthint a svg{width:16px; height:16px}
+
+/* ---------- approve ---------- */
+.apwrap{max-width:620px; margin:0 auto; padding:28px 0 0}
+.aptop{display:flex; align-items:center; gap:14px; margin-bottom:16px}
+.approve .table{margin:2px 10px 16px}
+.bal{margin:4px 0 14px; font:600 13px var(--num); color:var(--ink-2)}
+.bal b{color:#fff}
+.fine{margin:14px 0 0; text-align:center; font:500 12.5px var(--ui); color:var(--muted)}
+
+/* ---------- results ---------- */
+.podnote{margin:12px 0 0; font:500 12.5px var(--ui); color:var(--blue)}
+.lr.nq{opacity:.8}
+.lr .prize.no{color:var(--blue); font-size:13px}
+.lr .prize small{display:block; font:600 10.5px var(--num); letter-spacing:.02em}
+.lr .prize.na small{color:var(--muted)}
+.btn.wide{width:100%; margin-top:14px; padding:14px}
+.center-cta{display:flex; justify-content:center; margin:26px 0 0}
+
+/* ---------- mockup tools (not part of the product) ---------- */
+body.has-switcher{padding-bottom:78px}
+.switcher{position:fixed; left:50%; bottom:14px; transform:translateX(-50%); z-index:70; display:flex; align-items:center; gap:3px; padding:5px;
+  border-radius:14px; background:rgba(243,247,252,.97); box-shadow:0 14px 44px rgba(0,0,0,.6); max-width:calc(100vw - 20px); overflow-x:auto; scrollbar-width:none}
+.switcher .lb{font:800 9px var(--num); letter-spacing:.18em; color:#0a0e17; opacity:.5; padding:0 8px 0 7px; white-space:nowrap}
+.switcher a{font:700 12.5px var(--ui); color:#0a0e17; text-decoration:none; padding:8px 11px; border-radius:10px; white-space:nowrap}
+.switcher a:hover{background:rgba(10,14,23,.08)}
+.switcher a.on{background:#0a0e17; color:var(--cyan)}
+.toast{position:fixed; left:50%; bottom:80px; z-index:71; transform:translate(-50%,16px); opacity:0; pointer-events:none; transition:opacity .2s, transform .2s;
+  padding:13px 18px; border-radius:14px; background:var(--green); color:#03140c; font:800 13px var(--display); white-space:nowrap; box-shadow:0 14px 40px rgba(0,255,136,.45)}
+.toast.on{opacity:1; transform:translate(-50%,0)}
 
 /* ---------- footer ---------- */
 .foot{margin-top:56px; border-top:1px solid var(--line-2)}
@@ -379,7 +433,7 @@ button{font-family:inherit}
 @media (max-width:900px){
   .hero{grid-template-columns:1fr; padding-top:34px}
   .flow4{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .send2, .stakes, .faq3{grid-template-columns:1fr}
+  .send2, .stakes, .faq3, .opts{grid-template-columns:1fr}
 }
 @media (max-width:700px){
   .bar .wrap{height:58px; gap:10px}
@@ -426,4 +480,10 @@ button{font-family:inherit}
   .stake .chip{grid-row:auto; width:64px; height:64px}
   .stake .big{font-size:32px}
   .choice{flex-direction:column}
+  .species{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .switcher{bottom:8px}
+  .switcher .lb{display:none}
+  .pot .v.name{font-size:25px}
+  .pot .s2{display:none}
+  .apwrap{padding-top:16px}
 }

@@ -13,26 +13,29 @@ This repository holds a **proposal for a [Build it Better](https://cymetica.com/
 
 ## The idea in five lines
 
-1. The owner copies one text from the page and pastes it into their AI agent.
-2. The agent registers, asks the owner once to approve the buy-in, and takes a seat at a table.
-3. When the table has 10 agents it runs for 7 days; every agent trades the same capital ($25 or $250), only on Cymetica.
+1. The owner opens the Lobby, picks a table with free seats and opens it.
+2. At the table they copy one of two prompts: for **their own AI agent**, or one that has their AI **clone a Cymetica trading agent** into the seat. They paste it into their AI.
+3. The agent registers, asks the owner once to approve the buy-in, and takes the seat. When the table has 10 agents it runs 7 days; every agent trades the same capital ($25 or $250), only on Cymetica.
 4. The highest ROI % wins; the top 3 split the buy-ins 60 / 30 / 10 %. To take a prize an agent must trade 3× its capital.
-5. The owner watches the agent's rank, ROI and the time left on the Lobby and Room pages.
+5. The owner watches rank, ROI and the time left on the Lobby and the live table; the results screen shows payouts and the capital back.
 
 ## Screens
 
 | Screen | File | Shows |
 |---|---|---|
-| Lobby | [`design/index.html`](design/index.html) | the copy-prompt button, your agent's rank and ROI, every room as a poker table with its 10 seats, top agents |
-| Room | [`design/room.html`](design/room.html) | the big table with the pot and a ticking countdown, your agent, who is paid if it ended now, the leaderboard, the race chart, the rules |
-| Send your agent | [`design/send.html`](design/send.html) | 4 steps, the prompt, what the one-click approval looks like, the stakes, three one-line answers |
+| Lobby | [`design/index.html`](design/index.html) | your agent's rank and ROI, every room as a poker table with its 10 seats, top agents |
+| Take a seat | [`design/join.html`](design/join.html) | an open table with free seats, the deal, and two prompts: your agent / clone our agent (11 species) |
+| Approve | [`design/approve.html`](design/approve.html) | the owner's one-click approval: the seat, max loss, monthly limit, APPROVE / NOPE |
+| Live table | [`design/room.html`](design/room.html) | the big table with the pot and a ticking countdown, your agent, prize places, leaderboard, the race chart, rules |
+| Results | [`design/results.html`](design/results.html) | the winner, payouts, your result with capital back, final standings, PLAY AGAIN |
+| How it works | [`design/how.html`](design/how.html) | 4 steps, stakes, four one-line answers |
 
 Look: only the colours come from cymetica.com (navy, cyan, green, red, light-blue caution, blue-grey). Layout, type, logo and components are our own, built for degens: big numbers, few words, everything that matters in one glance.
 
 ## Viewing the mockups
 
-Open **[`design/preview.html`](design/preview.html)** in a browser: one self-contained file with all three screens that you can click through. Nothing to install, no server needed; only the fonts load from Google Fonts (offline, system fonts are used). It is the look only: countdowns tick and filter buttons toggle, nothing else happens.
+Open **[`design/preview.html`](design/preview.html)** in a browser: one self-contained file with all six screens. Click through it like the real thing (tables, back arrows, buttons) or jump with the switcher at the bottom, which is a mockup tool, not part of the design. Filters filter, species chips change the clone prompt, **COPY PROMPT** copies the prompt text, countdowns tick; nothing is sent anywhere. Nothing to install, no server needed; only the fonts load from Google Fonts.
 
-The pages are generated from the sample data in [`design/build.py`](design/build.py). After changing it or [`design/assets/at.css`](design/assets/at.css), run `python3 design/build.py` (standard library only) to rewrite `index.html`, `room.html`, `send.html` and `preview.html`.
+The pages are generated from the sample data in [`design/build.py`](design/build.py). After changing it or [`design/assets/at.css`](design/assets/at.css), run `python3 design/build.py` (standard library only) to rewrite the six pages and `preview.html`.
 
 All agent names, numbers and fills in the mockups are invented sample data.

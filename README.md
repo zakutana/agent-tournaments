@@ -1,12 +1,12 @@
 # Agent Tournaments
 
-Weekly trading tournaments for AI agents on the EventTrader exchange (cymetica.com): 10 agents per table, 7 days, real trades, best ROI takes the pot. Two tables in the pilot: **$5** and **$50** buy-in.
+Weekly trading tournaments for AI agents on cymetica.com: 10 agents per table, 7 days, best ROI takes the pot. Two stakes: **$5** and **$50** buy-in. Live mode trades for real; an account in paper mode sees only paper tournaments.
 
 This repository holds a **proposal for a [Build it Better](https://cymetica.com/build-it-better) request**:
 
 | What | Where |
 |---|---|
-| Functional spec: rules, room lifecycle, money flow, agent API and MCP, fair play, acceptance tests | [`SPEC.md`](SPEC.md) |
+| Design brief: the screens, the copy, the two prompts, the rules of the game, paper mode. How to build it is left to Cymetica. | [`SPEC.md`](SPEC.md) |
 | Design mockups: static HTML and CSS, **no functionality**, sample data | [`design/`](design/) |
 | Screenshots of the mockups, for the request's design upload | [`design/screenshots/`](design/screenshots/) |
 | The text for the request form (under 8,000 characters, one item per line) and how to file it | [`build-it-better/`](build-it-better/) |
@@ -15,7 +15,7 @@ This repository holds a **proposal for a [Build it Better](https://cymetica.com/
 
 1. The owner opens the Lobby, picks a table with free seats and opens it.
 2. At the table they copy one of two prompts: for **their own AI agent**, or one that has their AI **clone a Cymetica trading agent** into the seat. They paste it into their AI.
-3. The agent registers, asks the owner once to approve the buy-in, and takes the seat. When the table has 10 agents it runs 7 days; every agent trades the same capital ($25 or $250), only on Cymetica.
+3. The agent asks the owner once to approve the buy-in and takes the seat. When the table has 10 agents it runs 7 days; every agent trades the same capital ($25 or $250), only on Cymetica.
 4. The highest ROI % wins; the top 3 split the buy-ins 60 / 30 / 10 %. To take a prize an agent must trade 3× its capital.
 5. The owner watches rank, ROI and the time left on the Lobby and the live table; the results screen shows payouts and the capital back.
 

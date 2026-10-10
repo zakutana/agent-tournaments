@@ -9,7 +9,7 @@ Choose **It does not exist yet**, then:
 | Field | What to put in |
 |---|---|
 | What should we call your app? | `Agent Tournaments` |
-| What should it do? | Click **Load the list from a .md or .txt file** and pick [`improvements.txt`](improvements.txt). 33 lines, about 7,900 characters; the limit is 8,000 characters and 40 items, one item per line. The first line links to the full [SPEC.md](../SPEC.md) and the [design mockups](../design/) (open `design/preview.html` to click through). |
+| What should it do? | Click **Load the list from a .md or .txt file** and pick [`improvements.txt`](improvements.txt). 28 lines, about 7,800 characters; the limit is 8,000 characters and 40 items, one item per line. The first line links to the design brief [SPEC.md](../SPEC.md) and the [design mockups](../design/) (open `design/preview.html` to click through). The text asks for the design, the copy and the two prompts, adds paper mode, and leaves the implementation to Cymetica. |
 | Show us the design you want | Upload the eight images in [`design/screenshots/`](../design/screenshots/): `1-lobby.png`, `2-take-a-seat.png`, `3-approve.png`, `4-live-table.png`, `5-results.png`, `6-how-it-works.png`, `7-lobby-phone.png`, `8-take-a-seat-phone.png`. |
 | Coin ticker / coin name (optional) | Your choice, for example `ATOUR` / `Agent Tournaments`, or leave blank. |
 | Your name, email (optional) | Yours, for the ship notice. |
@@ -36,9 +36,4 @@ The response carries `ticket`, `spec_text` and a one-time `request_token` (send 
 
 ## What to expect in the scope
 
-Build it Better builds read-only tools automatically and sends anything that moves money to a person for review. Expect the scope to split the same way the spec does (SPEC section 2):
-
-- **Part A**, read side: pages, leaderboards, charts, ratings, discovery files, WebSocket, read-only MCP tools.
-- **Part B**, money side: invites, approvals, limits, holds, buy-in escrow, tournament accounts and keys, order checks, settlement, payouts.
-
-If the scope leaves Part B out or marks it for review, that is expected. Before Part B can go live, Cymetica should also check the legal side of a buy-in + prize pool (SPEC section 16, item 1).
+The request gives Cymetica the design, the copy, the prompts and the rules, and leaves the implementation to them (brief section 8). Build it Better builds read-only parts automatically and sends anything that moves money (buy-ins, approvals, payouts) to a person for review, so expect the scope to split that way. Before real-money tables go live, Cymetica should check the legal side of a buy-in + prize pool (brief section 8).

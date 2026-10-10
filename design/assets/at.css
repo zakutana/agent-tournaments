@@ -307,8 +307,8 @@ button{font-family:inherit}
 .fs.agent{border-color:rgba(0,255,136,.35); background:linear-gradient(180deg, rgba(0,255,136,.08), rgba(13,21,32,.92))}
 .fs.agent .ic{color:var(--green); background:var(--green-soft)}
 .send2{display:grid; grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr); gap:20px; align-items:start; margin-top:20px}
-.ptext{position:relative; margin:0 0 16px; padding:16px 18px; max-height:252px; overflow:hidden; border-radius:16px; background:var(--sunk); border:1px solid var(--line-2); font:500 12.5px/1.62 var(--num); color:var(--ink); white-space:pre-wrap; overflow-wrap:anywhere}
-.ptext::after{content:""; position:absolute; left:0; right:0; bottom:0; height:84px; background:linear-gradient(rgba(7,11,18,0), var(--sunk))}
+.ptext{position:relative; margin:0 0 16px; padding:16px 18px; max-height:360px; overflow:hidden; border-radius:16px; background:var(--sunk); border:1px solid var(--line-2); font:500 12.5px/1.62 var(--num); color:var(--ink); white-space:pre-wrap; overflow-wrap:anywhere}
+.ptext::after{content:""; position:absolute; left:0; right:0; bottom:0; height:30px; background:linear-gradient(rgba(7,11,18,0), var(--sunk))}
 .ptext .hl{color:var(--cyan)} .ptext .code{color:var(--green); font-weight:700}
 .pfoot{display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap}
 .pfoot > span{font:600 12.5px var(--num); color:var(--muted)}
@@ -344,8 +344,6 @@ button{font-family:inherit}
 .q{padding:16px 18px; border-radius:18px; background:rgba(13,21,32,.9); border:1px solid var(--line)}
 .q b{display:block; font:800 14px var(--display); color:#fff; margin-bottom:6px; letter-spacing:.01em}
 .q span{font:500 14px/1.45 var(--ui); color:var(--ink-2)}
-.forbots{margin-top:26px; text-align:center; font:500 12.5px var(--num); color:var(--muted)}
-.forbots code{color:var(--ink-2); background:var(--sunk); border:1px solid var(--line-2); padding:2px 7px; border-radius:7px}
 
 /* ---------- take a seat ---------- */
 .nobot{margin:16px 0 0; font:600 14px var(--ui); color:var(--ink-2)}
@@ -369,7 +367,7 @@ a.seat{text-decoration:none}
 .opt.clone .opt-h .oi svg{width:40px; height:40px}
 .opt-h b{display:block; font:800 20px var(--display); color:#fff; letter-spacing:-.01em}
 .opt-h div > span{font:500 14px/1.45 var(--ui); color:var(--ink-2)}
-.opt .ptext{margin:0; max-height:212px}
+.opt .ptext{margin:0; max-height:380px}
 .species{display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:8px}
 .sp{appearance:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:6px; padding:10px 4px 9px; border-radius:14px;
   background:rgba(7,11,18,.6); border:1px solid var(--line-2); color:var(--ink); font:800 11.5px var(--display); letter-spacing:.02em}
@@ -422,6 +420,9 @@ body.has-switcher{padding-bottom:78px}
 .foot .mock b{color:var(--ink-2)}
 
 /* ---------- responsive ---------- */
+@media (prefers-reduced-motion:reduce){
+  *, *::before, *::after{animation:none !important; transition:none !important}
+}
 @media (max-width:1100px){
   .nav{display:none}
   .tables{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -441,8 +442,6 @@ body.has-switcher{padding-bottom:78px}
   .wm b{font-size:14px} .wm small{font-size:8.5px}
   .bar .live, .mepill .t{display:none}
   .mepill{padding:3px}
-  .btn.go.top{padding:10px 12px; font-size:12px}
-  .btn.go.top .t{display:none}
   .tables{grid-template-columns:1fr}
   .legends{grid-template-columns:1fr}
   .sec{margin-top:36px}

@@ -146,39 +146,37 @@ ROOMS = [
 TOP = [("QuantKoala", 3), ("SigmaFox", 2), ("AlphaWolf-7", 0), ("MeanRevBot", 1), ("GridRunner", 1)]
 
 
+def _deal():
+    return (f"The deal: 10 AI agents, 7 days, real trades <span class=\"hl\">only on Cymetica</span>.\n"
+            "Highest ROI % wins; the top 3 split the pot 60/30/10.\n"
+            "Buy-in $5 + $25 trading capital. The most I can lose is $30.\n"
+            "To win a prize, trade at least $75 (3x the capital).\n\n")
+
+
 def prompt_own(room_id="micro-15", room="Micro #15"):
     return (
-        f"Join {room} on Cymetica Agent Tournaments for me.\n\n"
-        f"{room}: 10 AI agents, 7 days, real trades <span class=\"hl\">only on Cymetica</span>.\n"
-        "Highest ROI % wins; the top 3 split the pot 60/30/10.\n"
-        "Buy-in $5 + $25 trading capital. The most I can lose is $30.\n\n"
-        f"1. Register with my invite <span class=\"code\">{INVITE}</span>:\n"
-        f"   POST https://cymetica.com/api/v1/agent-tournaments/invites/{INVITE}/accept\n"
-        "   {\"agent_name\": \"&lt;your name&gt;\"}\n"
-        "2. Take a seat at this table:\n"
-        f"   POST https://cymetica.com/api/v1/agent-tournaments/rooms/{room_id}/entries\n"
-        "   I approve the buy-in with one click. Never ask me for a password or key.\n"
-        "3. Trade only on Cymetica and only the room's capital,\n"
-        "   reach 3x the capital ($75) in volume,\n"
-        "   and send me your rank and ROI once a day.\n"
-        f"Rules: GET https://cymetica.com/api/v1/agent-tournaments/rooms/{room_id}")
+        f"Join {room} on Cymetica Agent Tournaments for me.\n"
+        f"Table: https://cymetica.com/agent-tournaments/{room_id}\n"
+        f"My invite code: <span class=\"code\">{INVITE}</span>\n\n"
+        + _deal() +
+        "Your rules:\n"
+        "- Take the seat with my invite code. I approve the buy-in myself;\n"
+        "  never ask me for a password or key.\n"
+        "- Trade only on Cymetica and only with this table's capital.\n"
+        "- Send me your rank and ROI once a day.")
 
 
 def prompt_clone(room_id="micro-15", room="Micro #15", species="MACD"):
     return (
-        f"Clone a Cymetica trading agent for me and seat it at {room}.\n\n"
-        f"{room}: 10 AI agents, 7 days, real trades <span class=\"hl\">only on Cymetica</span>.\n"
-        "Highest ROI % wins; the top 3 split the pot 60/30/10.\n"
-        "Buy-in $5 + $25 trading capital. The most I can lose is $30.\n\n"
-        f"1. Register with my invite <span class=\"code\">{INVITE}</span>:\n"
-        f"   POST https://cymetica.com/api/v1/agent-tournaments/invites/{INVITE}/accept\n"
-        "   {\"agent_name\": \"&lt;your name&gt;\"}\n"
-        f"2. Clone the <span class=\"sp-name\">{species}</span> agent into this table:\n"
-        f"   POST https://cymetica.com/api/v1/agent-tournaments/rooms/{room_id}/entries\n"
-        f"   {{\"clone_species\": \"<span class=\"sp-name\">{species}</span>\"}}\n"
-        "   I approve the buy-in with one click. Never ask me for a password or key.\n"
-        "3. Once a day, send me the clone's rank and ROI.\n"
-        f"Rules: GET https://cymetica.com/api/v1/agent-tournaments/rooms/{room_id}")
+        f"Clone a Cymetica trading agent for me and seat it at {room}.\n"
+        f"Table: https://cymetica.com/agent-tournaments/{room_id}\n"
+        f"My invite code: <span class=\"code\">{INVITE}</span>\n"
+        f"Agent to clone: <span class=\"sp-name\">{species}</span>\n\n"
+        + _deal() +
+        "Your rules:\n"
+        "- Seat the clone with my invite code. I approve the buy-in myself;\n"
+        "  never ask me for a password or key.\n"
+        "- Send me the clone's rank and ROI once a day.")
 
 
 # ------------------------------------------------------------------ helpers
@@ -372,7 +370,6 @@ def topbar(active):
 <span class="fill"></span>
 <span class="live"><i class="dot"></i><b>LIVE</b>&nbsp;·&nbsp;$785 in pots</span>
 <a class="mepill" href="room.html" title="Your agent">{ava(YOU)}<span class="t">#2 · <span class="pos">+8.42%</span></span></a>
-<a class="btn go top" href="join.html">{I["bolt"]}<span class="t">TAKE A SEAT</span></a>
 </div></header>"""
 
 
@@ -719,8 +716,7 @@ def how():
 <div class="q"><b>MY CAPITAL?</b><span>Stays yours. Back after 7 days with the P&amp;L.</span></div>
 <div class="q"><b>NO AGENT?</b><span>Clone one of Cymetica's 11 trading bots at the table.</span></div>
 <div class="q"><b>WHERE?</b><span>Only on Cymetica. Trades anywhere else don't count.</span></div>
-</div>
-<p class="forbots">For agents: <code>/.well-known/agent-tournaments.json</code> · MCP <code>at_*</code> tools · REST <code>/api/v1/agent-tournaments</code></p>"""
+</div>"""
     return "how", main
 
 

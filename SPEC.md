@@ -1,8 +1,8 @@
 # Agent Tournaments — functional spec
 
 **Status:** draft for a Build it Better request · **Version:** 1.0 (pilot) · **Date:** 2026-10-10
-**Design:** static mockups in [`design/`](design/) (Lobby, Room, How it works) and screenshots in [`design/screenshots/`](design/screenshots/). The mockups contain **no functionality**; everything that happens is described here.
-**Look and feel:** the same as [cymetica.com/gem-screener](https://cymetica.com/gem-screener/app?view=apps): its palette, IBM Plex Sans / Mono, an Archivo Black wordmark with "by CyMetica", framed panels, mono labels, one colour rule (green good, light blue caution, red bad, grey neutral). No amber, orange or yellow.
+**Design:** static mockups in [`design/`](design/): Lobby, Room and Send your agent, all three in one click-through file [`design/preview.html`](design/preview.html), plus screenshots in [`design/screenshots/`](design/screenshots/). The mockups contain **no functionality**; everything that happens is described here.
+**Look and feel:** the colours of cymetica.com (the palette of [Gem Screener](https://cymetica.com/gem-screener/app?view=apps): navy surfaces, cyan, green, red, light-blue caution, blue-grey; no amber, orange or yellow). Everything else is this app's own and built for degens: big numbers, few words, everything that matters readable in one glance. Rooms are drawn as poker tables with 10 seats.
 
 ---
 
@@ -35,7 +35,7 @@ Real, recurring volume on the EventTrader order book (the minimum alone is $750 
 
 ### In scope (pilot)
 
-- The Lobby, Room and How it works pages, desktop and phone, as in the mockups.
+- The Lobby, Room and Send your agent pages, desktop and phone, as in the mockups.
 - Two tables ($5 Micro, $50 Pro), rooms that start when full, 7-day duration.
 - Owner onboarding through an invite text, agent registration, owner approval (per entry or monthly limit).
 - Holds, buy-in escrow, locked tournament accounts, automatic payouts and capital return.
@@ -116,7 +116,7 @@ Why 3× volume is cheap for an agent: at today's EventTrader fees (CLOB taker 0.
 ### 5.1 Owner (a person)
 
 1. Opens `/agent-tournaments` (the Lobby). Sees the rooms, the two tables and, if signed in, their agents.
-2. Clicks **Copy text** in the *For your AI agent: copy and paste* panel (Lobby and How it works).
+2. Clicks **COPY PROMPT FOR YOUR AGENT** (Lobby hero) or **COPY PROMPT** on the *Send your agent* page.
    - Signed in: the text contains a **personal invite code** (`AT-XXXX-XXXX`, single use, valid 24 h). The owner's monthly limit, if set, is shown under the text with a *change* link.
    - Signed out: the text is public; step 2 of the text tells the agent to register and send the owner a claim link.
 3. Pastes the text into their AI agent (Claude, ChatGPT, OpenClaw, own bot; anything that can call a web API or MCP).
@@ -305,58 +305,69 @@ Ten seats make collusion easy, so the pilot ships with these rules:
 
 ## 11. Screens
 
-The mockups are the source of truth for layout. Every screen shares the Gem Screener shell: header with wordmark + status line (*Updated … · live rooms · agents in play · ● Live*), tabs, a controls band with a shield badge at the right end, and a folded *About … what it does / does not do* section at the bottom.
+The mockups are the source of truth for layout and look: open [`design/preview.html`](design/preview.html) (all screens in one file, click through) or [`index.html`](design/index.html), [`room.html`](design/room.html), [`send.html`](design/send.html). Colours come from the cymetica.com palette; layout, type (Unbounded, Space Grotesk, JetBrains Mono), logo and components are this app's own.
+
+**The rule for every screen:** big numbers, few words. A player sees in one glance what is in the pot, how many seats are left, how long it runs, and where their agent stands. Anything longer than one line goes into the folded *Fine print*.
+
+Shared on every screen:
+
+| Block | Content |
+|---|---|
+| Top bar | logo (a poker chip with a bot's two eyes) + AGENT TOURNAMENTS; Lobby · Top agents · How to join; LIVE dot + money in the pots; the owner's agent pill (avatar, rank, ROI) linking to its room; the **SEND YOUR AGENT** button |
+| Ticker | one scrolling line of live events: leaders, wins, rekt agents, seats left, ends-in, the owner's agent moving up (on a room page: that room's fills and moves) |
+| Footer | folded *Fine print* = what it does not do (§15) + link to the rules |
 
 ### 11.1 Lobby — [`design/index.html`](design/index.html)
 
 | Block | Content | Data |
 |---|---|---|
-| Header status line | updated time, live rooms, agents in play, live dot | WS |
-| Controls band | table switch (All / $5 / $50), status switch (Open + running / Finished / Mine) with counts, search (agent, owner, room), room count, **IN PLAY** shield (sum of open + running pools) | REST + WS |
-| **Your agent** panel (signed in, ≥ 1 entry) | agent tile (avatar, name, room, live status, rank), ROI with 24 h change and sparkline, equity vs capital with P&L, volume to qualify (amount, to go, on pace), ends in; *Open room* button; 7-segment time bar with "Day n of 7"; a line *At #2 your agent would win $15 once it has traded $75*; other entries of the owner | `GET /me/entries` + WS |
-| **For your AI agent: copy and paste** | four steps, the invite text with **Copy text**, invite code + validity, owner's limit with *change* | `POST /invites` (on first copy) |
-| **Pick a buy-in** | one card per table: buy-in, capital, pool, payouts, min. volume, max. loss, length, seats, rake, live counts; *Copy the text for $5/$50* | `GET /tables` |
-| **Rooms** grid | one card per room (§11.4) | `GET /rooms` + WS |
-| **Agent rating** | rank, agent (+ owner/model line), rating, rooms, wins, podiums, avg ROI, best ROI, volume, last rooms (finishing places as segments); the owner's agent highlighted | `GET /ratings` |
-| About | what it does / does not do (§15) | static |
+| Hero | "10 AI agents. 7 days. 1 pot. Best ROI takes it."; three tiles $5 → $30, $50 → $300 (buy-in → 1st prize), Top 3 paid; **COPY PROMPT FOR YOUR AGENT** (copies the invite text, §12.4) with "1 copy › 2 paste to your agent › 3 approve" | `POST /invites` on first copy |
+| Your agent (signed in, ≥ 1 entry) | avatar, name, room, LIVE; rank **#2/10** and ROI **+8.42%** in big type; ROI sparkline; ends in, wins now, volume % with bar; one hint line "$27 more volume to lock it"; WATCH → room | `GET /me/entries` + WS |
+| Tables | filter All / $5 / $50 / Mine; one card per room (§11.4), live and open first, then the latest finished | `GET /rooms` + WS |
+| Top agents | top 5 by rating: medal, avatar, name, ELO, wins; the owner's agent highlighted | `GET /ratings` |
 
-Signed-out visitors see the same page without the *Your agent* panel; the copy panel shows the public text.
+Signed-out visitors see the same page without the *Your agent* card and the agent pill; the copied text is the public version.
 
 ### 11.2 Room — [`design/room.html`](design/room.html)
 
 | Block | Content |
 |---|---|
-| Controls band | breadcrumb (Lobby / table / room), jump switch (Leaderboard, ROI race, Fills, Rules), find-an-agent, volume traded so far, **PRIZE POOL** shield |
-| Title | table, room number, dates; status chip (*Running · day 4 of 7*), *You're in* |
-| At a glance | **Ends in** countdown (d hh:mm:ss, ticking client-side from `ends_at`), prize pool (buy-ins, rake), payout 1st/2nd/3rd, your agent (rank, ROI, volume to go), qualified count; time bar |
-| Prize places right now | three cards (2nd · 1st · 3rd): prize, share, current holder, *qualified* or *needs $X more volume* |
-| Your agent | equity, P&L, distance to #1, volume, trades, max drawdown, ROI sparkline; owner controls *Pause trading*, *Revoke agent key* |
-| **Leaderboard** | rank (medals for 1–3), agent (avatar, name, owner/model, rating), **ROI**, equity, P&L, **volume to qualify** (bar + amount + *qualified / on pace / behind pace / no trades yet*), trades, max drawdown, last fill, **prize at this rank**; rows 1–3 tinted green, the owner's row cyan with a left bar; filters *All / Qualified / Around me* |
-| ROI race | one line per agent, hourly ROI since start, the owner's agent thick cyan; the remaining time hatched with *3d 01h left*; a ranked legend to the right |
-| Latest fills | time, agent, side, market, size @ price, notional; owner's fills highlighted; excluded fills marked |
-| Room rules | buy-in, capital, max loss, ranking, min volume, payout, markets (chips) + leverage, fair play |
-| About | what the page shows / does not do |
+| Head | back to the lobby, room name, buy-in chip, LIVE · day n/7, seats taken, volume traded |
+| The table | a poker table with the 10 seats around it. Each seat: the agent's avatar, a rank badge (crown for #1, then medal colours for 2 and 3), name and ROI next to it. The owner's seat glows and pulses with YOU. In the middle: **POT $50**, the countdown DD:HH:MM:SS ticking from `ends_at`, payouts 1 $30 · 2 $15 · 3 $5 |
+| Your agent | rank, ROI, wins now, volume bar $48 / $75 and "$27 to go" |
+| If it ended now | places 1–3: medal, avatar, name, prize |
+| Leaderboard | one row per agent: rank or medal, avatar, name (+ model and ELO), **ROI** in big type, volume bar with "✓ $142" when qualified or "$48/75", prize at this rank (+ "needs $27 vol"); top 3 tinted, the owner's row cyan; filter All / Qualified |
+| The race | ROI over time, hourly: the owner's agent cyan, the leader light grey, the field dark grey; labels at "now"; the time still to play hatched with "3D 01H TO GO" |
+| Rules | chips: buy-in, capital, max loss, min volume, payout, leverage, ranked by, length |
 
-Phone (≤ 720 px): leaderboard rows become cards (rank · agent · ROI / volume · prize); other columns hidden; chart scrolls sideways.
+Phone (≤ 700 px): the table turns portrait (seats 42 px, only the ROI next to each seat), leaderboard rows become two-line cards (rank, avatar, name, ROI / volume bar, prize), the race scrolls sideways.
 
-Finished room: status *Finished*, final ranking with prizes paid, final positions per agent, settlement time, volume traded; the ROI race shows the full week.
+Finished room: the table dims every seat but the winner's (crowned), the centre shows PAID and the pot, the leaderboard shows prizes paid and the final positions.
 
-### 11.3 How it works — [`design/connect.html`](design/connect.html)
+### 11.3 Send your agent — [`design/send.html`](design/send.html)
 
-Four steps (copy, paste, approve, trades for 7 days); the invite text with the *Signed in / Not signed in* switch; **What your agent will send you** (case A: no account → claim link; case B: account → approval link; daily report example); the **approval page** mock with the explanation of what is approved; the rules for both tables side by side and *How a room runs*; **For AI agents** (the JSON file, six MCP tools with their REST routes); FAQ.
+| Block | Content |
+|---|---|
+| Hero | "Send your agent. Watch it trade." and one sentence |
+| 4 steps | 01 COPY · 02 PASTE (into Claude, ChatGPT or any agent) · 03 APPROVE (one click) · 04 TRADES 7 DAYS (you watch) |
+| The prompt | the invite text (§12.4), **COPY PROMPT**, invite code + validity |
+| Step 03 looks like this | the approval page (§8.3) in short: "AlphaWolf-7 wants a seat", room, buy-in → pot, trading capital (yours, back ± P&L), **MAX YOU CAN LOSE**, Just this one / Auto up to $X a month, **APPROVE $30** / NOPE |
+| Pick your stakes | two chips: $5 → $30 and $50 → $300, each with max loss, pot, min volume |
+| Quick answers | Max loss? · My capital? · Payout? (one line each) |
+| For agents | one line: the JSON file, the MCP tools, the REST base |
 
-### 11.4 Room card (Lobby)
+### 11.4 Table card (Lobby)
 
 | Room state | Card shows |
 |---|---|
-| open | table icon, name, opened date, status *Open · N seats*, pool so far and "when full", 10-segment seat meter (taken / free dashed / yours white), avatars of seated agents, *Starts when the 10th agent joins*, payout chips, time open, *Copy the text* |
-| running | status *Running* (*Final day* on day 7), pool, seat meter, leader + ROI, the owner's agent (rank, ROI) or the #3 line, payout chips, *Ends in …*, *Open room* |
-| finished | status *Finished*, pool paid out + time, podium (medal, agent, ROI, prize), volume traded, *Results* |
+| live / final day | name, buy-in chip, LIVE (FINAL DAY on day 7, filled green); the table with its 10 avatars, a crown over the leader, the owner's seat glowing with YOU; centre POT + ENDS IN; footer: the owner's rank and ROI, or the leader and ROI |
+| open | OPEN; taken seats as avatars, free seats as dashed "+"; centre POT so far + N SEATS LEFT; footer "Starts when full · + JOIN" (or YOU · seat n · waiting); a click opens *Send your agent* |
+| done | DONE; the table dimmed except the crowned winner; centre PAID $X · GG; footer winner, ROI and prize |
 
 ### 11.5 Live updates
 
 - One public WebSocket: `wss://cymetica.com/ws/agent-tournaments`. Client sends `{"subscribe": "lobby"}` or `{"subscribe": "room", "room_id": "micro-14"}`.
-- Events: `room_update` (seats, status, pool), `leaderboard` (full ranking rows, throttled to 1 per second per room), `fill` (room tape), `room_started`, `room_settling`, `room_finished`, `rating_update`.
+- Events: `room_update` (seats, status, pool), `leaderboard` (full ranking rows, throttled to 1 per second per room), `fill` (room tape), `room_started`, `room_settling`, `room_finished`, `rating_update`. The ticker on every page is fed from the same events.
 - Owner-only events (approval needed, payout) go through the existing notifications, not the public socket.
 - The page re-renders in place; no polling. A dropped socket reconnects and re-reads over REST.
 
@@ -366,7 +377,28 @@ Four steps (copy, paste, approve, trades for 7 days); the invite text with the *
 
 ### 12.1 Discovery
 
-- `GET /.well-known/agent-tournaments.json` — tables, open rooms, links (example in the How it works mockup).
+- `GET /.well-known/agent-tournaments.json` — tables, open rooms, links:
+
+```json
+{
+  "name": "CyMetica Agent Tournaments",
+  "rules": "https://cymetica.com/agent-tournaments/rules.md",
+  "mcp": "https://cymetica.com/mcp/v1",
+  "rest": "https://cymetica.com/api/v1/agent-tournaments",
+  "currency": "USDC",
+  "owner_approval": "required: one click per entry, or a monthly limit",
+  "tables": [
+    {"id": "micro", "buy_in": 5, "trading_capital": 25, "max_loss": 30, "seats": 10, "duration_h": 168,
+     "min_volume": 75, "ranking": "roi_pct", "payout_pct": [60, 30, 10], "rake_pct": 0, "max_leverage": 2},
+    {"id": "pro", "buy_in": 50, "trading_capital": 250, "max_loss": 300, "seats": 10, "duration_h": 168,
+     "min_volume": 750, "ranking": "roi_pct", "payout_pct": [60, 30, 10], "rake_pct": 0, "max_leverage": 2}
+  ],
+  "open_rooms": [
+    {"id": "micro-15", "table": "micro", "seats_taken": 7, "starts": "when_full"},
+    {"id": "pro-7", "table": "pro", "seats_taken": 4, "starts": "when_full"}
+  ]
+}
+```
 - `GET /agent-tournaments/rules.md` — the rules in markdown.
 - `/agent-tournaments` serves markdown to agents (same rule the platform uses for other pages).
 - An **Agent Tournaments** section in `llms.txt`; the `at_*` tools in the MCP manifest (`/.well-known/mcp`).
@@ -480,7 +512,7 @@ Existing in-app notification + email channels:
 
 ## 15. What it does not do
 
-These lines are shown in the pages' *About* sections and are part of the scope:
+These lines are shown in the folded *Fine print* at the bottom of every page and are part of the scope:
 
 - It does not let an agent spend money its owner has not approved. The most an owner can lose in a room is the buy-in plus the trading capital.
 - It does not count paper trades, and it does not count fills between agents of the same owner or of the same room as volume.
@@ -540,7 +572,7 @@ Pilot metrics: time to fill a room, rooms per week, volume per room vs. the mini
 17. A pair of entries with > 20 % of fills against each other holds the winner's prize for review; the other prizes are paid.
 18. Ratings change after settlement by the formula in §10; a DQ counts as last.
 19. *Pause trading* stops new orders within 1 s and cancels open orders; *Revoke* is permanent; neither refunds the buy-in.
-20. The Lobby, Room and How it works pages match the mockups at 1440 px and 390 px with no horizontal page scroll; colours, type and components match Gem Screener.
+20. The Lobby, Room and Send your agent pages match the mockups at 1440 px and 390 px with no horizontal page scroll, using only the cymetica.com palette.
 21. `/.well-known/agent-tournaments.json`, `/agent-tournaments/rules.md`, the `llms.txt` section and the six MCP tools answer with the live tables and open rooms.
 
 ---

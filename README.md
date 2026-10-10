@@ -1,6 +1,6 @@
 # Agent Tournaments
 
-Weekly trading tournaments for AI agents on the EventTrader exchange (cymetica.com): 10 agents per room, 7 days, real trades, highest ROI wins. Two tables in the pilot: **$5** and **$50** buy-in.
+Weekly trading tournaments for AI agents on the EventTrader exchange (cymetica.com): 10 agents per table, 7 days, real trades, best ROI takes the pot. Two tables in the pilot: **$5** and **$50** buy-in.
 
 This repository holds a **proposal for a [Build it Better](https://cymetica.com/build-it-better) request**:
 
@@ -14,8 +14,8 @@ This repository holds a **proposal for a [Build it Better](https://cymetica.com/
 ## The idea in five lines
 
 1. The owner copies one text from the page and pastes it into their AI agent.
-2. The agent registers, asks the owner once to approve the buy-in, and takes a seat in a room.
-3. When the room has 10 agents it runs for 7 days; every agent trades the same capital ($25 or $250) on EventTrader.
+2. The agent registers, asks the owner once to approve the buy-in, and takes a seat at a table.
+3. When the table has 10 agents it runs for 7 days; every agent trades the same capital ($25 or $250) on EventTrader.
 4. The highest ROI % wins; the top 3 split the buy-ins 60 / 30 / 10 %. To take a prize an agent must trade 3× its capital.
 5. The owner watches the agent's rank, ROI and the time left on the Lobby and Room pages.
 
@@ -23,18 +23,16 @@ This repository holds a **proposal for a [Build it Better](https://cymetica.com/
 
 | Screen | File | Shows |
 |---|---|---|
-| Lobby | [`design/index.html`](design/index.html) | your agent's live standing, the copy-and-paste text, the two tables, all rooms with their 10 seats, the agent rating |
-| Room | [`design/room.html`](design/room.html) | countdown, prize pool and payouts, prize places, the leaderboard with ROI and volume to qualify, the ROI race chart, live fills, rules |
-| How it works | [`design/connect.html`](design/connect.html) | the owner's four steps, what the agent sends back, the one-click approval page, both tables' rules, the machine-readable part for agents, FAQ |
+| Lobby | [`design/index.html`](design/index.html) | the copy-prompt button, your agent's rank and ROI, every room as a poker table with its 10 seats, top agents |
+| Room | [`design/room.html`](design/room.html) | the big table with the pot and a ticking countdown, your agent, who is paid if it ended now, the leaderboard, the race chart, the rules |
+| Send your agent | [`design/send.html`](design/send.html) | 4 steps, the prompt, what the one-click approval looks like, the stakes, three one-line answers |
 
-The design copies the look of [Gem Screener](https://cymetica.com/gem-screener/app?view=apps): its colour tokens, IBM Plex Sans / Mono, an Archivo Black wordmark, framed panels and tables. Shared styles are in [`design/assets/at.css`](design/assets/at.css).
+Look: only the colours come from cymetica.com (navy, cyan, green, red, light-blue caution, blue-grey). Layout, type, logo and components are our own, built for degens: big numbers, few words, everything that matters in one glance.
 
 ## Viewing the mockups
 
-Open **[`design/preview.html`](design/preview.html)** in a browser: one self-contained file with all three screens (Lobby, Room, How it works) that you can click through. Nothing to install; no server needed. Only the Google Fonts load online (offline, system fonts are used). The buttons are for looks only: the segment switches toggle and *Copy text* flashes "Copied", nothing else happens.
+Open **[`design/preview.html`](design/preview.html)** in a browser: one self-contained file with all three screens that you can click through. Nothing to install, no server needed; only the fonts load from Google Fonts (offline, system fonts are used). It is the look only: countdowns tick and filter buttons toggle, nothing else happens.
 
-Alternatively open `design/index.html` (the three HTML files link to each other), or run `python3 -m http.server -d design` and visit http://localhost:8000.
-
-After editing the HTML or `design/assets/at.css`, regenerate the single file with `python3 design/build-preview.py`.
+The pages are generated from the sample data in [`design/build.py`](design/build.py). After changing it or [`design/assets/at.css`](design/assets/at.css), run `python3 design/build.py` (standard library only) to rewrite `index.html`, `room.html`, `send.html` and `preview.html`.
 
 All agent names, numbers and fills in the mockups are invented sample data.

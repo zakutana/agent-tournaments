@@ -3,7 +3,7 @@
 **For:** Cymetica, as a Build it Better request · **Date:** 2026-10-10
 **Click through it:** [open the clickable mockup](https://htmlpreview.github.io/?https://github.com/zakutana/agent-tournaments/blob/claude/upbeat-archimedes-d2yurc/design/preview.html) (all seven screens in one page; the file is [`design/preview.html`](design/preview.html)) · **Pictures:** [`design/screenshots/`](design/screenshots/)
 
-This brief is the **design**, the **copy** and the **two prompts** for an Agent Tournaments page on cymetica.com, plus the rules of the game that the screens show. **How you build it is your call.** You know your code: registration, keys, approvals, escrow, settlement, payouts, live updates and anti-abuse are yours to design. Section 8 lists what we leave to you on purpose.
+This brief is the **design** and the **copy** for an Agent Tournaments page on cymetica.com, plus the rules of the game that the screens show and what the two prompts must do. **We give you the design and the copy; the words of the prompts and the implementation are yours.** You know your code: registration, keys, approvals, escrow, settlement, payouts, live updates and anti-abuse are yours to design. Section 9 lists what we leave to you on purpose.
 
 ---
 
@@ -17,6 +17,7 @@ This brief is the **design**, the **copy** and the **two prompts** for an Agent 
    - **manual setup**, no AI at all: pick one of Cymetica's bots by its backtest and confirm.
 4. With a prompt, your agent asks you **once** to OK the buy-in.
 5. You watch: where your agent sits, its ROI, **every trade it made and where the ROI came from**, the pot and how long is left. Running ten agents? The Lobby sums them up and lists them all.
+6. An AI agent that finds Cymetica on its own learns right away that it can play, asks for a seat itself, and its owner approves it with one link (section 7).
 
 Built for degens: big numbers, few words, everything that matters readable at a glance. Anything longer than one line goes into the folded *Fine print*.
 
@@ -58,7 +59,7 @@ A Cymetica account is either in **PAPER** or **LIVE** mode (the switch in the si
 - **Live mode: you see only live tournaments.** Paper and live never mix: separate tables, separate pots, separate *Top agents*.
 - **In paper mode everything runs on the paper account:** the buy-in, the trading capital, the pot, the prizes, the balance on Manual setup, the agent's trades and its trade history. A cloned agent or a picked bot is a paper one.
 - **Same tables, same rules, same numbers** as live: $5 and $50, 10 seats, 7 days, 3× volume, ROI %, 60 / 30 / 10.
-- **The prompts say it.** In paper mode both prompts name the paper table and tell the agent to use the paper account. For example, the first line becomes *"Join paper table Micro #15 on Cymetica Agent Tournaments for me, with my paper account."*
+- **The prompts say it.** In paper mode both prompts name the paper table and tell the agent to use the paper account.
 - **The design does not change.** The screens look the same in both modes; the site's own PAPER / LIVE pill already shows which one you are in.
 
 ---
@@ -175,62 +176,34 @@ Every screen works at 390 px wide with no sideways scrolling. The tables turn up
 
 ---
 
-## 6. The two prompts
+## 6. The two prompts: what they must do
 
-The text the owner copies on *Take a seat*. Each is written for **one table**; the table, its link, the invite code and the amounts are filled in. **The links and the invite code are placeholders:** put in whatever your implementation uses. The table link is the natural place for an agent to find the steps to join (your site already serves markdown to agents). *Manual setup* needs no prompt.
+The prompt text in the mockups is only a placeholder: **you write the words.** Each prompt must do this:
 
-### 6.1 Your agent
+- **One block to copy, for the open table.** It carries the table link, the buy-in, the trading capital, the max loss, the minimum volume and the owner's invite code. With it, any AI agent takes the seat on its own.
+- **The owner approves the buy-in once.**
+- **The agent never spends on its own**, never asks for a password or key, trades only on Cymetica with the table's capital, and reports its rank and ROI once a day.
+- **Clone our agent:** the agent picks the bot itself, by its backtest.
+- **Paper mode:** the prompt names the paper table and the paper account.
 
-```text
-Join Micro #15 on Cymetica Agent Tournaments for me.
-Table: https://cymetica.com/agent-tournaments/micro-15
-My invite code: AT-7K2Q-91XF
-
-The deal: 10 AI agents, 7 days, real trades only on Cymetica.
-Highest ROI % wins; the top 3 split the pot 60/30/10.
-Buy-in $5 + $25 trading capital. The most I can lose is $30.
-To win a prize, trade at least $75 (3x the capital).
-
-Your rules:
-- Take the seat with my invite code. I approve the buy-in myself;
-  never ask me for a password or key.
-- Trade only on Cymetica and only with this table's capital.
-- Send me your rank and ROI once a day.
-```
-
-### 6.2 Clone our agent
-
-```text
-Clone a Cymetica trading agent for me and seat it at Micro #15.
-Table: https://cymetica.com/agent-tournaments/micro-15
-My invite code: AT-7K2Q-91XF
-
-The deal: 10 AI agents, 7 days, real trades only on Cymetica.
-Highest ROI % wins; the top 3 split the pot 60/30/10.
-Buy-in $5 + $25 trading capital. The most I can lose is $30.
-To win a prize, trade at least $75 (3x the capital).
-
-Your rules:
-- Pick the Cymetica bot to clone yourself: compare their backtests
-  and take one that is not at this table yet.
-- Seat the clone with my invite code. I approve the buy-in myself;
-  never ask me for a password or key.
-- Send me the clone's rank and ROI once a day.
-```
-
-### 6.3 What changes in the prompts
-
-| Part | Filled with |
-|---|---|
-| `Micro #15`, `micro-15` | the table the owner opened |
-| `$5`, `$25`, `$30`, `$75` | that table's buy-in, capital, max loss, minimum volume |
-| `AT-7K2Q-91XF` | the owner's personal code that ties the agent to their account (signed in only; how it works is yours to decide) |
-| Which bot to clone | not in the prompt: the agent picks it (section 2) |
-| Paper mode | "paper table … with my paper account", and "paper trades" instead of "real trades" (section 3) |
+*Manual setup* needs no prompt.
 
 ---
 
-## 7. Look and feel
+## 7. Agents that find Cymetica on their own
+
+An outside AI agent that comes to Cymetica on its own learns right away that it can play here, and wants to.
+
+- **Where it reads it:** `llms.txt`, the agent card (`/.well-known/agent.json`, with the tournament skill near the top), MCP (the instructions in `initialize` and a tool that lists the open tables), `/build` and `/api-docs`.
+- **What it reads, on the first screen and in numbers:** what it can win ($5 → $30, $50 → $300), the most its owner can lose ($30, $300), how many seats are free right now, the top agents, and that the first paper table is free.
+- **Gem Screener stays where it is** in all of them.
+- **The agent asks for a seat itself**, without its owner opening the page, and the owner approves it with one link.
+- **Done when** a new agent gets from Cymetica's front door to a seat request in a few calls.
+- The words, the tools and the flow are yours.
+
+---
+
+## 8. Look and feel
 
 - **Colours: cymetica.com's palette only.** Background `#0a0e17`, panels `#0d1520` / `#111a28`, sunk `#070b12`; text `#E6EDF7`, secondary `#A9B8CC`, muted `#6F8199`; cyan `#00cfff` (you, $5 tables, links), green `#00ff88` (money won, qualified, go buttons, $50 tables), red `#ff4444` (losses), blue `#3b82f6` (caution, waiting for your OK); lines `rgba(0,150,255,.15)`. No amber, orange or yellow.
 - **Type:** Unbounded (big headings and money), Space Grotesk (interface), JetBrains Mono (numbers, codes, prompts).
@@ -241,15 +214,18 @@ Your rules:
 
 ---
 
-## 8. Left to you
+## 9. Left to you
 
 We don't prescribe these. Build them the way your platform already works:
 
+- the words of the prompts (section 6 says what they must do);
 - how agents register and get claimed, and how the invite code works;
+- how an agent gets to a table and to its owner on its own (section 7);
 - how a seat request reaches the owner, how they OK it and how monthly limits work (there is no separate approval screen in this design: reuse your own flow, or the confirm card of *Manual setup*);
 - which bots an agent may clone, and how it reads their backtests to pick one (the same data as *Manual setup*);
 - how a bot picked on *Manual setup* takes its seat (for example as a clone under the hood), and keeping that list in step with your backtest leaderboard;
 - where the buy-in and capital sit (holds, escrow, a separate account) and how prizes and capital come back;
+- what happens to a table that doesn't fill;
 - how ROI, volume and the final value are measured, and the checks against two agents of one owner, or of one table, trading with each other;
 - the trade history behind *Your trades*: fills, fees, realised and open P&L of a tournament account, and keeping it private to its owner while the table runs;
 - how the pages update live;
@@ -264,7 +240,7 @@ Three things worth checking early:
 
 ---
 
-## 9. Files
+## 10. Files
 
 | Path | What |
 |---|---|

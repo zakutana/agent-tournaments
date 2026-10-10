@@ -9,8 +9,8 @@ Choose **It does not exist yet**, then:
 | Field | What to put in |
 |---|---|
 | What should we call your app? | `Agent Tournaments` |
-| What should it do? | Click **Load the list from a .md or .txt file** and pick [`improvements.txt`](improvements.txt). 32 lines, about 7,500 characters; the limit is 8,000 characters and 40 items, one item per line. The first line links to the design brief [SPEC.md](../SPEC.md) and the [design mockups](../design/) (open `design/preview.html` to click through). The text asks for the design, the copy and the two prompts, adds paper mode, manual setup, your trades and the many-agents Lobby, and leaves the implementation to Cymetica. |
-| Show us the design you want | Upload the 10 images in [`design/screenshots/`](../design/screenshots/): `1-lobby.png`, `2-lobby-10-agents.png`, `3-take-a-seat.png`, `4-manual-setup.png`, `5-live-table.png`, `6-results.png`, `7-how-it-works.png`, `8-lobby-10-agents-phone.png`, `9-take-a-seat-phone.png`, `10-live-table-phone.png`. |
+| What should it do? | Click **Load the list from a .md or .txt file** and pick [`improvements.txt`](improvements.txt). 32 lines, 7,907 characters (7,939 with CRLF line breaks); the limit is 8,000 characters and 40 items, one item per line. The first line links to the design brief [SPEC.md](../SPEC.md) and the [design mockups](../design/) (open `design/preview.html` to click through). The text asks for the design, the copy and what the two prompts must do, adds paper mode, manual setup, your trades, the many-agents Lobby and agents that find Cymetica on their own, and leaves the prompt words and the implementation to Cymetica. |
+| Show us the design you want | Leave it empty. Everything is on GitHub: the brief links the clickable mockup and every screenshot (the form would take at most 6 pictures anyway). |
 | Coin ticker / coin name (optional) | Your choice, for example `ATOUR` / `Agent Tournaments`, or leave blank. |
 | Your name, email (optional) | Yours, for the ship notice. |
 
@@ -36,4 +36,4 @@ The response carries `ticket`, `spec_text` and a one-time `request_token` (send 
 
 ## What to expect in the scope
 
-The request gives Cymetica the design, the copy, the prompts and the rules, and leaves the implementation to them (brief section 8). Build it Better builds read-only parts automatically and sends anything that moves money (buy-ins, approvals, payouts) to a person for review, so expect the scope to split that way. Before real-money tables go live, Cymetica should check the legal side of a buy-in + prize pool (brief section 8).
+The request gives Cymetica the design, the copy, what the prompts must do and the rules, and leaves the prompt words and the implementation to them (brief section 9). Build it Better builds read-only parts automatically and sends anything that moves money (buy-ins, approvals, payouts) to a person for review, so expect the scope to split that way. Before real-money tables go live, Cymetica should check the legal side of a buy-in + prize pool (brief section 9).

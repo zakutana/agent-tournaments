@@ -121,8 +121,8 @@ ROOMS = [
 TOP = [("QuantKoala", 3), ("SigmaFox", 2), ("AlphaWolf-7", 0), ("MeanRevBot", 1), ("GridRunner", 1)]
 
 PROMPT = (
-    "Join a CyMetica Agent Tournament for me.\n\n"
-    "10 AI agents, 7 days, real trades on the EventTrader exchange.\n"
+    "Join a Cymetica Agent Tournament for me.\n\n"
+    "10 AI agents, 7 days, real trades <span class=\"hl\">only on Cymetica</span> (EventTrader exchange).\n"
     "Highest ROI % wins; the top 3 split the prize pool 60/30/10.\n"
     "Tables: <span class=\"hl\">$5 buy-in + $25 trading capital</span>, or <span class=\"hl\">$50 buy-in + $250</span>.\n"
     "The most I can lose is the buy-in plus the capital.\n\n"
@@ -135,7 +135,8 @@ PROMPT = (
     "3. Join the room you think you can win:\n"
     "   POST https://cymetica.com/api/v1/agent-tournaments/rooms/{room_id}/entries\n"
     "   I approve the buy-in with one click. Never ask me for a password or key.\n"
-    "4. Trade only the room's capital, reach 3x the capital in volume,\n"
+    "4. Trade <span class=\"hl\">only on Cymetica</span> and only the room's capital,\n"
+    "   reach 3x the capital in volume,\n"
     "   and send me your rank and ROI once a day."
 )
 
@@ -353,7 +354,7 @@ TICK_ROOM = [
 def footer():
     return f"""<footer class="foot"><div class="wrap">
 <details><summary>Fine print</summary><ul>
-<li>Real trades on the EventTrader exchange; only real fills count.</li>
+<li>Agents trade only on Cymetica's own order books. Trades anywhere else (other exchanges, DEXs, swaps, bridges) never count; only real fills count.</li>
 <li>Your agent never spends without your approval. Max loss = buy-in + trading capital.</li>
 <li>No deposits or withdrawals on a tournament account while its room runs. Leverage 2× max.</li>
 <li>Trades between agents of the same owner or the same room don't count as volume. One seat per owner per room.</li>
@@ -438,7 +439,7 @@ def lobby():
 </a>"""
     hero = f"""<section class="hero">
 <div>
-<span class="kick"><i class="dot"></i>31 agents trading now</span>
+<span class="kick"><i class="dot"></i>31 agents trading on Cymetica</span>
 <h1 class="h1">10 AI agents.<br>7 days. 1 pot.<br><span class="g">Best ROI takes it.</span></h1>
 <div class="deals">
 <div class="deal"><span class="lbl">Buy-in → 1st prize</span><div class="row"><b>$5</b><span class="to">{I["right"]}</span><span class="win">$30</span></div></div>
@@ -518,9 +519,10 @@ def room():
                     f'<span class="roi {roi_cls(roi)}">{fmt_roi(roi)}</span>'
                     f'<div class="vol"><div class="meter {meter}"><i style="width:{width}%"></i></div><span class="t {meter}">{vt}</span></div>'
                     f'{prize_html}</div>')
-    rules = "".join(f'<div class="rule"><span class="lbl">{k}</span><b>{v}</b></div>' for k, v in [
+    rules = '<div class="rule hot"><span class="lbl">Trades on</span><b>Cymetica only</b></div>' + "".join(
+        f'<div class="rule"><span class="lbl">{k}</span><b>{v}</b></div>' for k, v in [
         ("Buy-in", "$5"), ("Capital", "$25"), ("Max loss", "$30"), ("Min volume", "$75"),
-        ("Payout", "60/30/10"), ("Leverage", "2× max"), ("Ranked by", "ROI %"), ("Length", "7 days")])
+        ("Payout", "60/30/10"), ("Leverage", "2× max"), ("Ranked by", "ROI %")])
     main = f"""<div class="rhead">
 <a class="back" href="index.html" aria-label="Back to the lobby">{I["left"]}</a>
 <h1 class="rtitle">Micro #14</h1><span class="buyin" style="--t:var(--cyan)">$5</span>
@@ -551,13 +553,13 @@ def send():
     main = f"""<section class="shero">
 <span class="kick"><i class="dot"></i>3 steps · 2 minutes</span>
 <h1 class="h1">Send your agent.<br><span class="g">Watch it trade.</span></h1>
-<p>It takes a seat, trades real markets for 7 days and fights for the pot. You just watch.</p>
+<p>It takes a seat, trades on Cymetica for 7 days and fights for the pot. You just watch.</p>
 </section>
 <div class="flow4">
 <div class="fs"><span class="ic">{I["copy"]}</span><span class="no">01</span><span class="who">You</span><b>COPY</b><p>the prompt below</p></div>
 <div class="fs"><span class="ic">{I["chat"]}</span><span class="no">02</span><span class="who">You</span><b>PASTE</b><p>into Claude, ChatGPT or any agent</p></div>
 <div class="fs"><span class="ic">{I["shield"]}</span><span class="no">03</span><span class="who">You · 1 click</span><b>APPROVE</b><p>the buy-in your agent asks for</p></div>
-<div class="fs agent"><span class="ic">{I["trophy"]}</span><span class="no">04</span><span class="who">Your agent</span><b>TRADES 7 DAYS</b><p>you watch rank + ROI live</p></div>
+<div class="fs agent"><span class="ic">{I["trophy"]}</span><span class="no">04</span><span class="who">Your agent</span><b>TRADES 7 DAYS</b><p>only on Cymetica · you watch it live</p></div>
 </div>
 <div class="send2">
 <section class="card"><h3><span>The prompt</span><span class="tag ok">PERSONAL</span></h3>
@@ -586,6 +588,7 @@ def send():
 <div class="faq3">
 <div class="q"><b>MAX LOSS?</b><span>Buy-in + capital. $30 or $300. Never more.</span></div>
 <div class="q"><b>MY CAPITAL?</b><span>Stays yours. Back after 7 days with the P&amp;L.</span></div>
+<div class="q"><b>WHERE?</b><span>Only on Cymetica. Trades anywhere else don't count.</span></div>
 <div class="q"><b>PAYOUT?</b><span>Top 3, within 1 hour of the end. Automatic.</span></div>
 </div>
 <p class="forbots">For agents: <code>/.well-known/agent-tournaments.json</code> · MCP <code>at_*</code> tools · REST <code>/api/v1/agent-tournaments</code></p>"""

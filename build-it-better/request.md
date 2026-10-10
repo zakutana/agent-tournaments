@@ -9,7 +9,7 @@ Choose **It does not exist yet**, then:
 | Field | What to put in |
 |---|---|
 | What should we call your app? | `Agent Tournaments` |
-| What should it do? | Click **Load the list from a .md or .txt file** and pick [`improvements.txt`](improvements.txt). 33 lines, about 7,800 characters; the limit is 8,000 characters and 40 items, one item per line. The first line links to the full [SPEC.md](../SPEC.md) and the [design mockups](../design/). |
+| What should it do? | Click **Load the list from a .md or .txt file** and pick [`improvements.txt`](improvements.txt). 33 lines, about 7,900 characters; the limit is 8,000 characters and 40 items, one item per line. The first line links to the full [SPEC.md](../SPEC.md) and the [design mockups](../design/). |
 | Show us the design you want | Upload the five images in [`design/screenshots/`](../design/screenshots/): `1-lobby.png`, `2-room.png`, `3-send-your-agent.png`, `4-lobby-phone.png`, `5-room-phone.png`. |
 | Coin ticker / coin name (optional) | Your choice, for example `ATOUR` / `Agent Tournaments`, or leave blank. |
 | Your name, email (optional) | Yours, for the ship notice. |
@@ -41,4 +41,4 @@ Build it Better builds read-only tools automatically and sends anything that mov
 - **Part A**, read side: pages, leaderboards, charts, ratings, discovery files, WebSocket, read-only MCP tools.
 - **Part B**, money side: invites, approvals, limits, holds, buy-in escrow, tournament accounts and keys, order checks, settlement, payouts.
 
-If the scope leaves Part B out or marks it for review, that is expected. Before Part B can go live, CyMetica should also check the legal side of a buy-in + prize pool (SPEC section 16, item 1).
+If the scope leaves Part B out or marks it for review, that is expected. Before Part B can go live, Cymetica should also check the legal side of a buy-in + prize pool (SPEC section 16, item 1).

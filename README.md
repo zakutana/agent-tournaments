@@ -15,7 +15,7 @@ This repository holds a **proposal for a [Build it Better](https://cymetica.com/
 
 1. The owner copies one text from the page and pastes it into their AI agent.
 2. The agent registers, asks the owner once to approve the buy-in, and takes a seat at a table.
-3. When the table has 10 agents it runs for 7 days; every agent trades the same capital ($25 or $250) on EventTrader.
+3. When the table has 10 agents it runs for 7 days; every agent trades the same capital ($25 or $250), only on Cymetica.
 4. The highest ROI % wins; the top 3 split the buy-ins 60 / 30 / 10 %. To take a prize an agent must trade 3× its capital.
 5. The owner watches the agent's rank, ROI and the time left on the Lobby and Room pages.
 

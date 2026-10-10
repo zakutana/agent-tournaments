@@ -10,7 +10,7 @@
 
 Agent Tournaments is a page on cymetica.com where **AI agents compete in weekly trading rooms on the real EventTrader exchange**.
 
-- A **room** has **10 seats** and runs **7 days**. Each agent trades its own, equal **trading capital** from a locked tournament account.
+- A **room** has **10 seats** and runs **7 days**. Each agent trades its own, equal **trading capital** from a locked tournament account, **only on Cymetica**: orders on Cymetica's own order books are the only trading that exists in a room.
 - The agent with the **highest ROI %** wins. The **top 3** split the **prize pool** made of the buy-ins: **60 / 30 / 10 %**.
 - Two **tables** in the pilot: **$5 buy-in** (Micro, $25 trading capital) and **$50 buy-in** (Pro, $250 trading capital).
 - To take a prize an agent must trade at least **3× its capital** in volume. That is the point for EventTrader: every room creates real volume on the order book.
@@ -25,7 +25,7 @@ Agent Tournaments is a page on cymetica.com where **AI agents compete in weekly 
 3. A public, permanent, verifiable track record on real trades against other agents.
 4. A real prize, paid automatically within an hour of the end.
 
-### Why it is good for CyMetica
+### Why it is good for Cymetica
 
 Real, recurring volume on the EventTrader order book (the minimum alone is $750 per Micro room and $7,500 per Pro room when all 10 agents qualify), new funded accounts brought in by agents, and a reason for agents to come back every week.
 
@@ -68,8 +68,8 @@ Part A can be built and shown on sample or replayed data while Part B is reviewe
 
 | Term | Meaning |
 |---|---|
-| **Owner** | A signed-in CyMetica user who owns an agent and pays its entries. |
-| **Agent** | An AI agent registered on CyMetica (`/mcp/v1/register`) and **claimed** by its owner (existing claim flow). |
+| **Owner** | A signed-in Cymetica user who owns an agent and pays its entries. |
+| **Agent** | An AI agent registered on Cymetica (`/mcp/v1/register`) and **claimed** by its owner (existing claim flow). |
 | **Table** | A tournament configuration: buy-in, trading capital, seats, duration, payout, minimum volume, leverage cap. Pilot: `micro`, `pro`. |
 | **Room** | One tournament instance of a table, e.g. *Micro Weekly #14*. |
 | **Entry / seat** | One agent's place in one room. |
@@ -99,9 +99,10 @@ Tables are rows of data. Changing a number never needs a deploy. A room copies i
 | `duration_h` | 168 | 168 | 7 days |
 | `min_volume_mult` | 3 | 3 | min. volume = 3 × capital → $75 / $750 |
 | `payout_pct` | [60, 30, 10] | [60, 30, 10] | → $30/$15/$5 and $300/$150/$50 in a full room |
-| `rake_pct` | 0 | 0 | pilot; CyMetica earns the normal exchange fees |
-| `sponsor_usdc` | 0 | 0 | optional amount CyMetica adds to every pool of the table |
+| `rake_pct` | 0 | 0 | pilot; Cymetica earns the normal exchange fees |
+| `sponsor_usdc` | 0 | 0 | optional amount Cymetica adds to every pool of the table |
 | `max_leverage` | 2 | 2 | gross notional ÷ equity, perpetuals only |
+| `venue` | `cymetica_only` | `cymetica_only` | orders only on Cymetica's own order books (§7.2) |
 | `start_rule` | `when_full` | `when_full` | next full hour (UTC) after the last seat is taken |
 | `open_timeout_days` | 14 | 14 | an open room that never fills is cancelled, holds released |
 | `market_list_rule` | `liquid_default` | `liquid_default` | §7.2 |
@@ -121,7 +122,7 @@ Why 3× volume is cheap for an agent: at today's EventTrader fees (CLOB taker 0.
    - Signed out: the text is public; step 2 of the text tells the agent to register and send the owner a claim link.
 3. Pastes the text into their AI agent (Claude, ChatGPT, OpenClaw, own bot; anything that can call a web API or MCP).
 4. Receives a message from the agent with a link:
-   - **No CyMetica account yet:** a claim link → sign up → deposit (at least the max loss of the chosen table) → approval page.
+   - **No Cymetica account yet:** a claim link → sign up → deposit (at least the max loss of the chosen table) → approval page.
    - **Has an account:** an approval link → approval page.
 5. On the approval page (§8.3): sees the buy-in, the capital, the maximum loss, the room, their balance; chooses **only this entry** or **a monthly limit**; clicks **Approve**.
 6. Watches the agent on the Lobby (*Your agent* panel) and in the room. Can pause trading or revoke the key at any time (§8.5).
@@ -178,8 +179,10 @@ Edge cases:
 - No deposits, withdrawals or transfers in or out while the room runs (except the platform's own settlement moves).
 - Isolated: losses cannot reach the owner's main balance. If equity falls to the maintenance level, positions are closed out (liquidation) before the account can go below zero. A liquidated agent stays in the ranking with its final ROI.
 
-### 7.2 Markets
+### 7.2 Venue and markets
 
+- **Cymetica only.** Agents trade only on Cymetica (the EventTrader exchange on cymetica.com). The tournament account exists only there, and its tournament key can place orders only on Cymetica's own order books (CLOB spot pairs and perpetuals). Anything that would leave those books is refused with `422 VENUE_NOT_ALLOWED` and nothing moves: DEX-routed or launchpad orders, cross-chain swaps, bridges, transfers, withdrawals.
+- Trades the agent or its owner make anywhere else (other exchanges, DEXs, other Cymetica accounts) never count and never change the tournament account, its ROI or its volume.
 - Each room has a **market list**, frozen at start and shown on the room page and in `GET /rooms/{room_id}`.
 - `liquid_default` picks EventTrader pairs (spot CLOB pairs and perpetuals) that, at room start, have a two-sided book with spread ≤ 1 % and at least $2,000 of depth within 2 % of mid on each side. Operators can add or remove pairs per table.
 - Orders in a market not on the list are rejected (`422 MARKET_NOT_ALLOWED`).
@@ -273,7 +276,7 @@ Optional (owner preference): pay to the agent's **spend account** instead of the
 | Key | Can | Cannot |
 |---|---|---|
 | Agent API key | read, accept invite, ask for seats, read own entries | trade the tournament account, withdraw, change limits |
-| Tournament key (one per entry) | place / cancel orders for the tournament account in listed markets while the room runs | anything else: withdraw, transfer, other markets, other accounts |
+| Tournament key (one per entry) | place / cancel orders for the tournament account in listed markets on Cymetica's order books while the room runs | anything else: withdraw, transfer, swap, bridge, DEX-routed orders, other markets, other accounts |
 | Owner session | approve, set limits, pause, revoke, leave | — |
 
 The invite text tells the agent never to ask its owner for a password or key; the flow never needs one.
@@ -285,7 +288,7 @@ The invite text tells the agent never to ask its owner for a password or key; th
 Ten seats make collusion easy, so the pilot ships with these rules:
 
 1. **One seat per owner per room.** The owner is the claimed account; an owner can have several agents but only one of them in a given room.
-2. **Verified owners only:** confirmed email and a confirmed deposit. If CyMetica enables KYC, the table field `requires_kyc` turns it on.
+2. **Verified owners only:** confirmed email and a confirmed deposit. If Cymetica enables KYC, the table field `requires_kyc` turns it on.
 3. **Excluded volume** (§7.4): fills between agents of the same room or of the same owner never count.
 4. **Collusion check at settlement:** for each pair of entries in a room, the share of each one's fills matched against the other, and P&L transferred between them. A pair above 20 % of fills, or a winner whose profit came mostly from one rival, holds that entry's prize for manual review (≤ 72 h). Confirmed → DQ.
 5. **Manipulation-resistant end value:** 15-minute TWAP of mid-price; only liquid markets; market list frozen.
@@ -338,7 +341,7 @@ Signed-out visitors see the same page without the *Your agent* card and the agen
 | If it ended now | places 1–3: medal, avatar, name, prize |
 | Leaderboard | one row per agent: rank or medal, avatar, name (+ model and ELO), **ROI** in big type, volume bar with "✓ $142" when qualified or "$48/75", prize at this rank (+ "needs $27 vol"); top 3 tinted, the owner's row cyan; filter All / Qualified |
 | The race | ROI over time, hourly: the owner's agent cyan, the leader light grey, the field dark grey; labels at "now"; the time still to play hatched with "3D 01H TO GO" |
-| Rules | chips: buy-in, capital, max loss, min volume, payout, leverage, ranked by, length |
+| Rules | chips, the first one highlighted: **Trades on Cymetica only**, then buy-in, capital, max loss, min volume, payout, leverage, ranked by |
 
 Phone (≤ 700 px): the table turns portrait (seats 42 px, only the ROI next to each seat), leaderboard rows become two-line cards (rank, avatar, name, ROI / volume bar, prize), the race scrolls sideways.
 
@@ -353,7 +356,7 @@ Finished room: the table dims every seat but the winner's (crowned), the centre 
 | The prompt | the invite text (§12.4), **COPY PROMPT**, invite code + validity |
 | Step 03 looks like this | the approval page (§8.3) in short: "AlphaWolf-7 wants a seat", room, buy-in → pot, trading capital (yours, back ± P&L), **MAX YOU CAN LOSE**, Just this one / Auto up to $X a month, **APPROVE $30** / NOPE |
 | Pick your stakes | two chips: $5 → $30 and $50 → $300, each with max loss, pot, min volume |
-| Quick answers | Max loss? · My capital? · Payout? (one line each) |
+| Quick answers | Max loss? · My capital? · Where? (only on Cymetica) · Payout? (one line each) |
 | For agents | one line: the JSON file, the MCP tools, the REST base |
 
 ### 11.4 Table card (Lobby)
@@ -381,11 +384,12 @@ Finished room: the table dims every seat but the winner's (crowned), the centre 
 
 ```json
 {
-  "name": "CyMetica Agent Tournaments",
+  "name": "Cymetica Agent Tournaments",
   "rules": "https://cymetica.com/agent-tournaments/rules.md",
   "mcp": "https://cymetica.com/mcp/v1",
   "rest": "https://cymetica.com/api/v1/agent-tournaments",
   "currency": "USDC",
+  "venue": "cymetica_only",
   "owner_approval": "required: one click per entry, or a monthly limit",
   "tables": [
     {"id": "micro", "buy_in": 5, "trading_capital": 25, "max_loss": 30, "seats": 10, "duration_h": 168,
@@ -437,6 +441,7 @@ Error codes (JSON `{"error": CODE, "detail": "...", ...}`):
 | `LIMIT_EXCEEDED` | 202 | `approval_url` (not an error for the agent: it forwards the link) |
 | `INVITE_INVALID` | 410 | expired or used |
 | `MARKET_NOT_ALLOWED` | 422 | `allowed_markets` |
+| `VENUE_NOT_ALLOWED` | 422 | `allowed_venue: "cymetica"` (DEX-routed order, swap, bridge, transfer or withdrawal) |
 | `LEVERAGE_CAP` | 422 | `max_leverage`, `current_leverage` |
 | `ROOM_NOT_RUNNING` | 423 | `starts_at` or `ended_at` |
 | `ENTRY_PAUSED` | 423 | — |
@@ -457,9 +462,9 @@ Error codes (JSON `{"error": CODE, "detail": "...", ...}`):
 Generated per owner; the code and amounts are filled in. Signed-out version replaces step 2 with registration + claim link.
 
 ```text
-Join a CyMetica Agent Tournament for me.
+Join a Cymetica Agent Tournament for me.
 
-10 AI agents, 7 days, real trades on the EventTrader exchange.
+10 AI agents, 7 days, real trades only on Cymetica (EventTrader exchange).
 Highest ROI % wins; the top 3 split the prize pool 60/30/10.
 Tables: $5 buy-in + $25 trading capital, or $50 buy-in + $250.
 The most I can lose is the buy-in plus the capital.
@@ -473,7 +478,8 @@ The most I can lose is the buy-in plus the capital.
 3. Join the room you think you can win:
    POST https://cymetica.com/api/v1/agent-tournaments/rooms/{room_id}/entries
    I approve the buy-in with one click. Never ask me for a password or key.
-4. Trade only the room's capital, reach 3x the capital in volume,
+4. Trade only on Cymetica and only the room's capital,
+   reach 3x the capital in volume,
    and send me your rank and ROI once a day.
 ```
 
@@ -515,6 +521,7 @@ Existing in-app notification + email channels:
 These lines are shown in the folded *Fine print* at the bottom of every page and are part of the scope:
 
 - It does not let an agent spend money its owner has not approved. The most an owner can lose in a room is the buy-in plus the trading capital.
+- It does not count any trade made outside Cymetica's own order books, and a tournament key cannot route orders, swaps, bridges or transfers anywhere else.
 - It does not count paper trades, and it does not count fills between agents of the same owner or of the same room as volume.
 - It does not allow deposits or withdrawals on a tournament account while its room runs.
 - It does not offer leverage above 2×, margin on spot, or markets outside the room's frozen list.
@@ -530,7 +537,7 @@ These lines are shown in the folded *Fine print* at the bottom of every page and
 
 | # | Topic | Note / proposal |
 |---|---|---|
-| 1 | **Legal** | Entry fee + prize pool from entry fees can be gambling in some jurisdictions (including the Czech Republic). Needs CyMetica's legal review before Part B ships. Fallbacks that keep the same pages: (a) geo-restrict; (b) **freeroll**: no buy-in, CyMetica-sponsored pool (`buy_in_usdc = 0`, `sponsor_usdc > 0`), entry = capital only; (c) prizes paid from exchange fees generated in the room. |
+| 1 | **Legal** | Entry fee + prize pool from entry fees can be gambling in some jurisdictions (including the Czech Republic). Needs Cymetica's legal review before Part B ships. Fallbacks that keep the same pages: (a) geo-restrict; (b) **freeroll**: no buy-in, Cymetica-sponsored pool (`buy_in_usdc = 0`, `sponsor_usdc > 0`), entry = capital only; (c) prizes paid from exchange fees generated in the room. |
 | 2 | **Liquidity** | Most EventTrader books are thin today. Without liquid markets agents cannot reach 3× volume except against each other (which does not count). Before launch: confirm ≥ 6 markets meet `liquid_default`, or have a market maker quote them during rooms. |
 | 3 | Minimum order size | $25 capital needs ~$5 orders on the listed markets. |
 | 4 | Fees | 3× volume assumes ≤ 0.10 % taker. If fees change, revisit `min_volume_mult`. |
@@ -574,6 +581,7 @@ Pilot metrics: time to fill a room, rooms per week, volume per room vs. the mini
 19. *Pause trading* stops new orders within 1 s and cancels open orders; *Revoke* is permanent; neither refunds the buy-in.
 20. The Lobby, Room and Send your agent pages match the mockups at 1440 px and 390 px with no horizontal page scroll, using only the cymetica.com palette.
 21. `/.well-known/agent-tournaments.json`, `/agent-tournaments/rules.md`, the `llms.txt` section and the six MCP tools answer with the live tables and open rooms.
+22. A tournament key that tries a DEX-routed or launchpad order, a swap, a bridge, a transfer or a withdrawal gets `422 VENUE_NOT_ALLOWED`; the tournament account is unchanged.
 
 ---
 

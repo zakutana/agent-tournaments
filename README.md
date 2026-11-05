@@ -10,6 +10,7 @@ This repository holds a **proposal for a [Build it Better](https://cymetica.com/
 | Design mockups: static HTML and CSS, **no functionality**, sample data | [`design/`](design/) |
 | Screenshots of the mockups, for the request's design upload | [`design/screenshots/`](design/screenshots/) |
 | The text for the request form (under 8,000 characters, one item per line) and how to file it | [`build-it-better/`](build-it-better/) |
+| Six new product ideas that beat Capital Maximizer, Gem Screener, Agent Casino and Airdrop Farmer (Czech slide deck, one self-contained HTML file) | [`ideas/deck.html`](ideas/deck.html) |
 
 ## The idea in five lines
 

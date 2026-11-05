@@ -1,0 +1,485 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Šest trumfů</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Instrument+Sans:wdth,wght@75..100,400..700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: a deck of trump cards. Every idea is a stat card (6 stats, 1–5) laid next to the card it beats;
+   slides are full-screen sections that snap on desktop and simply stack on phones. */
+:root{
+  --paper:#ECEEF3; --card:#FFFFFF; --ink:#141829; --muted:#5A6077; --line:#D3D7E2;
+  --accent:#2B3CD0; --accent-soft:rgba(43,60,208,.10); --bench:#A3A9BC;
+  --win:#0B7F57; --lose:#B83A26;
+  --display:"Archivo","Arial Narrow",system-ui,sans-serif;
+  --body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+  --shadow:0 1px 0 rgba(20,24,41,.06),0 10px 30px -12px rgba(20,24,41,.22);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0F1220; --card:#181C2F; --ink:#E7E9F2; --muted:#959BB2; --line:#2A3048;
+  --accent:#8E9BFF; --accent-soft:rgba(142,155,255,.13); --bench:#545B76;
+  --win:#3FCB92; --lose:#FF7B63; --shadow:0 1px 0 rgba(0,0,0,.4),0 14px 34px -14px rgba(0,0,0,.7);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0F1220; --card:#181C2F; --ink:#E7E9F2; --muted:#959BB2; --line:#2A3048;
+  --accent:#8E9BFF; --accent-soft:rgba(142,155,255,.13); --bench:#545B76;
+  --win:#3FCB92; --lose:#FF7B63; --shadow:0 1px 0 rgba(0,0,0,.4),0 14px 34px -14px rgba(0,0,0,.7);
+  color-scheme:dark}
+
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+@media (min-width:1000px) and (min-height:700px){html{scroll-snap-type:y mandatory}}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 15.5px/1.5 var(--body);-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+p{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+
+.slide{min-height:100svh;scroll-snap-align:start;display:flex;align-items:center;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:clamp(28px,5vh,56px);border-bottom:1px solid var(--line)}
+.inner{width:100%;max-width:1240px;margin:0 auto;display:grid;gap:clamp(18px,2.6vh,28px);min-width:0}
+
+.eyebrow{font:600 12px/1.2 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.eyebrow b{color:var(--accent);font-weight:600}
+.lead{font-size:clamp(16px,1.35vw,19px);color:var(--muted);max-width:62ch}
+
+/* ---------- title ---------- */
+.title h1{font-size:clamp(56px,10.5vw,152px);line-height:.86;font-weight:900;font-stretch:125%;letter-spacing:-.02em}
+.title h1 span{color:var(--accent)}
+.fan{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+.fan .mini{flex:1 1 150px;min-width:0;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px 14px;box-shadow:var(--shadow);
+  transform:rotate(var(--r,0deg));transition:transform .25s ease}
+.fan .mini:hover{transform:rotate(0deg) translateY(-4px)}
+.mini .k{font:600 11px/1 var(--mono);letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.mini .n{font:800 19px/1.1 var(--display);font-stretch:110%;margin-top:8px}
+.mini .t{font:600 11.5px/1.35 var(--mono);color:var(--accent);margin-top:10px}
+.meta{font:500 13px/1.5 var(--mono);color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 22px}
+
+/* ---------- stat card ---------- */
+.tcard{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:18px 18px 16px;display:grid;gap:12px;align-content:start;min-width:0;position:relative}
+.tcard .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.tcard .no{font:900 34px/1 var(--display);font-stretch:125%;color:var(--accent)}
+.tcard .sum{font:600 12px/1.3 var(--mono);color:var(--muted);text-align:right}
+.tcard .sum b{display:block;font:800 26px/1 var(--display);font-stretch:110%;color:var(--ink)}
+.stats{display:grid;gap:9px}
+.stat{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:3px 10px;align-items:center}
+.stat .lab{font:600 12.5px/1.2 var(--body);display:flex;gap:6px;align-items:center}
+.stat .mark{font:700 11px/1 var(--mono)}
+.stat .mark.w{color:var(--win)} .stat .mark.l{color:var(--lose)} .stat .mark.e{color:var(--muted)}
+.stat .val{font:600 12px/1 var(--mono);color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
+.stat .val b{color:var(--ink);font-weight:600}
+.pips{grid-column:1/-1;display:grid;grid-template-columns:repeat(5,1fr);gap:3px}
+.pips i{height:7px;border-radius:2px;background:var(--line);position:relative}
+.pips i.on{background:var(--accent)}
+.pips i.b::after{content:"";position:absolute;left:0;right:0;bottom:-4px;height:2px;border-radius:1px;background:var(--bench)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font:500 11px/1.2 var(--mono);color:var(--muted);border-top:1px dashed var(--line);padding-top:10px}
+.legend span{display:inline-flex;gap:6px;align-items:center}
+.legend i{width:14px;height:6px;border-radius:2px;background:var(--accent);display:inline-block}
+.legend i.b{height:2px;background:var(--bench)}
+
+/* ---------- idea slide ---------- */
+.idea .head{display:grid;gap:8px}
+.idea h2{font-size:clamp(34px,4.6vw,62px);line-height:.95;font-weight:850;font-stretch:118%;letter-spacing:-.015em}
+.idea .hook{font:600 clamp(17px,1.55vw,22px)/1.3 var(--body);max-width:60ch}
+.idea .grid{display:grid;grid-template-columns:300px minmax(0,1fr);gap:clamp(18px,2.4vw,34px);align-items:start}
+.body{display:grid;gap:16px;min-width:0}
+.problem{font-size:15.5px;color:var(--muted);max-width:75ch}
+.problem b{color:var(--ink);font-weight:600}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;counter-reset:s}
+.steps li{counter-increment:s;padding-top:10px;border-top:2px solid var(--ink);font-size:14.5px;line-height:1.45;min-width:0}
+.steps li::before{content:counter(s);display:block;font:800 13px/1 var(--mono);color:var(--accent);margin-bottom:6px}
+.blocks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 22px}
+.blk{display:grid;gap:4px;min-width:0;font-size:14px;line-height:1.45}
+.blk h3{font:600 11.5px/1.2 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.blk.beat{grid-column:1/-1;background:var(--accent-soft);border-radius:10px;padding:12px 14px}
+.blk.beat h3{color:var(--accent)}
+.blk.beat ul{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 20px}
+.blk.beat li{padding-left:16px;position:relative}
+.blk.beat li::before{content:"▲";position:absolute;left:0;top:.15em;font-size:9px;color:var(--accent)}
+.foot{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 22px;border-top:1px solid var(--line);padding-top:12px}
+.foot .blk{font-size:13.5px;color:var(--muted)}
+.foot .blk strong{color:var(--ink);font-weight:600}
+
+/* ---------- bar slide ---------- */
+.bench-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.bcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;display:grid;gap:8px;align-content:start;min-width:0}
+.bcard .n{font:800 20px/1.1 var(--display);font-stretch:112%}
+.bcard p{font-size:14px;color:var(--muted)}
+.bcard .sc{font:600 12px/1 var(--mono);color:var(--muted);margin-top:4px}
+.bcard .sc b{font:800 22px/1 var(--display);color:var(--ink)}
+.rule{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px;align-items:start}
+.rule .test{border:2px solid var(--ink);border-radius:12px;padding:16px 18px;display:grid;gap:8px}
+.rule .test h3{font:800 22px/1.1 var(--display);font-stretch:115%}
+.rule .test p{font-size:15px}
+.crit{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 18px;counter-reset:c}
+.crit li{font-size:14px;line-height:1.4;min-width:0}
+.crit li b{display:block;font-family:var(--display);font-weight:750;font-size:15px}
+
+/* ---------- comparison table ---------- */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:760px;font-variant-numeric:tabular-nums}
+th,td{padding:8px 12px;text-align:center;border-bottom:1px solid var(--line);font:500 14px/1.2 var(--mono)}
+th{font:600 11px/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);background:var(--paper)}
+td:first-child,th:first-child{text-align:left;font:700 15px/1.2 var(--display);font-stretch:108%}
+td .vs{display:block;font:500 11px/1.2 var(--mono);color:var(--muted);margin-top:3px;font-stretch:100%}
+tr.bm td{color:var(--muted)}
+tr.bm td:first-child{font-weight:600}
+tr:last-child td{border-bottom:0}
+td.tot{font:800 18px/1 var(--display)}
+tr.idea-row td.tot{color:var(--accent)}
+.cell{display:inline-grid;place-items:center;width:30px;height:26px;border-radius:6px}
+.c5{background:var(--accent);color:var(--card)} .c4{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.split{display:flex;align-items:center;gap:8px;padding:12px;border-top:2px solid var(--ink)}
+.note{font-size:13px;color:var(--muted);max-width:90ch}
+
+/* ---------- next steps ---------- */
+.queue{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;counter-reset:q}
+.queue li{counter-increment:q;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:6px;align-content:start;min-width:0}
+.queue li::before{content:counter(q);font:900 28px/1 var(--display);font-stretch:125%;color:var(--accent)}
+.queue .n{font:800 18px/1.1 var(--display);font-stretch:110%}
+.queue p{font-size:14px;color:var(--muted)}
+.chip{justify-self:start;font:600 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:5px 8px;border-radius:99px;border:1px solid currentColor}
+.chip.auto{color:var(--win)} .chip.human{color:var(--muted)}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.facts div{font-size:14px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+.facts b{display:block;color:var(--ink);font:750 16px/1.25 var(--display);margin-bottom:2px}
+
+.src{columns:2 340px;column-gap:28px;font-size:13px;line-height:1.5}
+.src li{break-inside:avoid;margin-bottom:6px;color:var(--muted)}
+.src a{word-break:break-word}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;right:max(16px,calc(env(safe-area-inset-right,0px) + 16px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px);z-index:20;
+  display:flex;align-items:center;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:99px;padding:4px;box-shadow:var(--shadow)}
+.nav button{appearance:none;border:0;background:transparent;color:var(--ink);width:34px;height:34px;border-radius:99px;font:600 15px/1 var(--mono);cursor:pointer}
+.nav button:hover{background:var(--accent-soft);color:var(--accent)}
+.nav .pos{font:600 12px/1 var(--mono);color:var(--muted);padding:0 6px;font-variant-numeric:tabular-nums;min-width:58px;text-align:center}
+
+@media (max-width:1080px){
+  .idea .grid{grid-template-columns:1fr}
+  .tcard{max-width:520px}
+  .bench-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rule{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  body{font-size:15px}
+  .steps,.blocks,.foot,.blk.beat ul,.crit,.queue,.facts,.bench-row{grid-template-columns:1fr}
+  .fan .mini{transform:none;flex-basis:140px}
+  .slide{padding-block:40px 72px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+
+<main id="deck"></main>
+<nav class="nav" aria-label="Navigace prezentace">
+  <button id="prev" type="button" aria-label="Předchozí slide">↑</button>
+  <span class="pos" id="pos">1 / 11</span>
+  <button id="next" type="button" aria-label="Další slide">↓</button>
+</nav>
+
+<script>
+/* Criteria order everywhere: Wow, Peníze, Exkluzivita, Síť, Postavitelnost, Příjem. Scores 1–5 are our estimates. */
+const CRIT = ["Wow / sdílitelnost","Peníze pro uživatele","Exkluzivita","Síťový efekt","Postavitelnost","Příjmový model"];
+const CRIT_SHORT = ["Wow","Peníze","Exkluzivita","Síť","Postavit.","Příjem"];
+
+const BENCH = {
+  cm:{name:"Capital Maximizer", s:[3,4,2,1,4,2], line:"Najde 3 nejlepší USDC trasy jen na prověřených platformách ($30M+, audit, rok provozu)."},
+  gs:{name:"Gem Screener",      s:[4,3,3,1,5,1], line:"Řadí tokeny podle market capu vůči tržbám, měřítko je Hyperliquid za 24× roční tržby."},
+  ac:{name:"Agent Casino",      s:[4,3,2,4,4,3], line:"AI agenti u jednoho stolu, nejlepší ROI bere pot. Hra, kterou hrají stroje."},
+  af:{name:"Airdrop Farmer",    s:[3,4,3,1,3,4], line:"Vlastní farm wallet pro každého, nic se nesdílí, poplatek 10 % jen z realizovaného zisku."}
+};
+
+const IDEAS = [
+{
+  name:"Rug Market", vs:"gs", s:[5,4,5,4,4,4],
+  hook:"Pojisti si memecoin dřív, než z něj dev vysaje likviditu.",
+  problem:"Na pump.fun dokončí bonding curve <b>jen 1–3 % tokenů</b> a 98,6 % jich skončí jako rug nebo pump-and-dump. DeFi pojišťovny rugy nekryjí vůbec.",
+  steps:[
+    "Ke každému novému tokenu vznikne trh: <b>Rug do 7 dní? ANO / NE.</b>",
+    "Držitel koupí ANO jako krytí své pozice. Kdo projektu věří, krytí prodává a bere prémii.",
+    "Vyhodnocení jde samo z chainu: vytažená likvidita, dump dev walletu, nový mint nebo blacklist."
+  ],
+  beat:[
+    "Gem Screener řekne, co je levné. Rug Market řekne, s jakou pravděpodobností to umře, a tu cenu určují peníze, ne model.",
+    "Funguje od 5. minuty života tokenu, kdy žádný screener ještě nemá data o tržbách."
+  ],
+  now:"Insiderské ringy jedou dál: na Robinhood Chain si jeden vzal $15,5–18,4 M z 53–56 launchů (září 2026).",
+  money:"2 % z každého obchodu na trhu a 1 % z výplaty.",
+  mvp:"Paper trhy na prediction engine Cymetica, data z Launch Check a Team Dump Radar: automatický build. Reálné peníze jdou na lidskou kontrolu.",
+  exists:"Nexus Mutual a InsurAce kryjí protokoly, ne rugy. Launchpady jako Believe mají jen vlastní ochranné poplatky. Parametrický trh na rug jsme nenašli.",
+  risk:"Dev si koupí krytí na vlastní rug. Proto krytí jen do velikosti doložené pozice, wallety napojené na deva vyloučené a framing jako prediction market, ne pojistka."
+},
+{
+  name:"Pay-on-Win Calls", vs:"gs", s:[5,4,4,5,4,4],
+  hook:"Za alpha zaplatíš, jen když vyjde. Když ne, dostaneš peníze zpátky z callerova stake.",
+  problem:"Placené alpha skupiny a KOLové berou peníze předem. <b>74 % kupců solanových memecoinů</b> skončí s méně SOL a nikdo za špatný call neručí.",
+  steps:[
+    "Caller zapečetí call (token, směr, cíl, termín): hash jde na chain a k němu vlastní stake.",
+    "Kupec zaplatí za odemčení. Peníze leží v escrow, ne u callera.",
+    "V termínu oracle zkontroluje cenu. Trefa: caller dostane platby. Netrefa: kupci dostanou peníze zpět plus podíl ze stake."
+  ],
+  beat:[
+    "Gem Screener sám píše „není to signál“ a jeho backtest vyšel nepřesvědčivě. Tady je signál, za který někdo ručí vlastními penězi.",
+    "Track record nejde smazat ani zfalšovat. Žebříček callerů je z poloviny hra a z poloviny veřejný pranýř."
+  ],
+  now:"ZachXBT v roce 2026 rozkrývá sítě shillerů. KOL leaderboardy (Kolscan, Kolytics) ukazují jen wallety, ne prodané cally.",
+  money:"10 % z vyplacených callů. Caller s dobrým skóre může zvednout cenu.",
+  mvp:"Paper stake a paper platby, ceny z datového feedu Cymetica, veřejný žebříček: automatický build. AI agenti volají cally přes MCP.",
+  exists:"Calledit dělá jen notářský hash, Kolytics jen track record, Paradox jen profit share. Stake, escrow a vrácení peněz dohromady nikdo.",
+  risk:"Caller prodá call a obchoduje proti němu. Proto onchain kontrola jeho walletů po dobu callu a minimální likvidita tokenu. Placené signály v USA můžou spadat pod CTA, start mimo USA."
+},
+{
+  name:"Agent IPO", vs:"ac", s:[5,4,3,5,3,5],
+  hook:"Agent vyhrál turnaj. Teď do něj můžeš investovat, s podlahou v NAV.",
+  problem:"Nejlepší AI agenti po turnaji zmizí. Agent tokeny typu Virtuals nekryje nic: <b>fees ~ $566 k za září</b>, výplaty sítě stojí od března.",
+  steps:[
+    "Agent s ověřeným výsledkem (min. 90 dní live nebo v turnajích) vydá podíly na vlastní vault.",
+    "Cena = NAV + prémie, kterou určí trh. Podíl jde vždy vyměnit zpět za NAV.",
+    "Při překročení drawdown limitu (třeba −25 %) se agent sám vypne a každému vrátí NAV."
+  ],
+  beat:[
+    "Agent Casino končí po týdnu jedním potem. IPO z vítězů dělá investiční aktivum a casino se stává jejich přípravkou.",
+    "Divák se mění v investora: sledovat agenta má smysl i po konci stolu."
+  ],
+  now:"Daos.fun ukázal hlad po fondových tokenech (prémie až 200× NAV na vrcholu). Chybí ale povinný track record a podlaha.",
+  money:"Listing fee, 1 % z obchodů s podíly, 10 % ze zisku agenta (jako u Hyperliquid vaultů).",
+  mvp:"Paper podíly na paper vaulty agentů z Agent Casino a MicroFunds: automatický build. Reálné vaulty jdou na lidskou kontrolu.",
+  exists:"Daos.fun (bez track recordu), Hyperliquid vaults (bez prémie), GT Protocol (freeze při −20 %). Všechny tři prvky v jednom nikdo.",
+  risk:"Regulace cenných papírů. Proto nejdřív paper a omezené jurisdikce, vault drží smart kontrakt a agent nikdy nesahá na výběry."
+},
+{
+  name:"Lost & Found", vs:"af", s:[5,4,3,3,5,3],
+  hook:"Vlož adresu a za minutu víš, kolik peněz jsi na chainu zapomněl.",
+  problem:"Nevybrané airdropy, zapomenuté LP, zaseklé bridge, staking odměny, rent na Solaně. <b>Čtvrtina adres</b> z prvního airdropu Optimismu ho nikdy nevybrala.",
+  steps:[
+    "Vložíš adresy, ENS nebo .sol jméno. Žádné připojení walletky.",
+    "Sken přes EVM, Solanu a Sui: airdropy, LP, bridge, staking, rent a vratné zálohy.",
+    "Jedno tlačítko VYBRAT VŠE. Podepisuješ ze své walletky a dostaneš kartu „Našel jsem $847“."
+  ],
+  beat:[
+    "Airdrop Farmer vkládá kapitál a měsíce čeká na airdrop, který nikdo neslibuje. Lost & Found vrací peníze hned a bez rizika.",
+    "Karta s nalezenou částkou se sdílí sama. Bonus: žebříček zapomenutých peněz na veřejně známých walletech."
+  ],
+  now:"Airdropy v roce 2025 vyplatily ~$4,5 mld a sybil filtry čistí 40–59 % walletů. Kdo projde, často nic nevybere.",
+  money:"10 % jen z toho, co se vybere přes nás. Sken je zdarma.",
+  mvp:"Sken je čistě ke čtení, takže jde o automatický build Build it Better. Claim podepisuje uživatel.",
+  exists:"Drops.bot, Bankless Claimables a KwikClaim řeší airdropy, Solana Tracker rent (1 % z vráceného). Všech 6 kategorií v jednom toku nikdo.",
+  risk:"Falešné „claim“ weby jsou klasický drainer. Proto nikdy nežádáme approve, jen přímé claim transakce na veřejný seznam ověřených kontraktů."
+},
+{
+  name:"Liquidation Shield", vs:"cm", s:[4,5,4,2,3,4],
+  hook:"Hlídá tvoji páku ve 3 ráno. Platíš, jen když tě zachrání.",
+  problem:"V říjnu 2026 šlo do likvidace <b>$12,5 mld, z toho 74 % longy</b>. Automatická ochrana existuje jen pro lending (DeFi Saver), pro perps ne.",
+  steps:[
+    "Propojíš pozice: perp DEXy, burzy přes API klíč, lending. Nastavíš strop, kolik smí Shield doplnit.",
+    "Shield hlídá vzdálenost od likvidace napříč všemi místy a včas doplní margin ze stablecoin rezervy nebo pozici zmenší.",
+    "Když cena pak opravdu sáhne na tvou původní likvidační cenu, zaplatíš poplatek. Jinak nic."
+  ],
+  beat:[
+    "Capital Maximizer přidá pár procent výnosu. Shield zachrání 100 % pozice v noci, kdy spíš.",
+    "Úspěch je doložitelný na grafu: „zachránili jsme ti $X“ je hotový příspěvek na X."
+  ],
+  now:"Kaskády se opakují: Black Sunday II v únoru 2026 ($2,2 mld), 19. srpna $2,7–3 mld, říjen $12,5 mld.",
+  money:"Success fee 5 % zachráněného kolaterálu. Platí se, jen když záchrana byla potřeba.",
+  mvp:"Mapa vzdálenosti od likvidace a alerty napříč účty: automatický build. Zásahy přes klíč bez práva výběru jdou na lidskou kontrolu. Perps Cymetica hned.",
+  exists:"DeFi Saver chrání jen lending, Bybit Mutual jen vlastní CeFi (beta). Perps napříč venues se success fee nikdo.",
+  risk:"Zásah ve špatnou chvíli. Proto strop nastavuje uživatel, žádné výběry a nejdřív simulace v paper módu."
+},
+{
+  name:"Whale Yield Mirror", vs:"cm", s:[4,4,4,2,4,3],
+  hook:"Parkuj stablecoiny tam, kde je parkují velryby. A odejdi s nimi.",
+  problem:"Nejvyšší APR bývá past. Velké peníze často odcházejí <b>dřív, než výnos spadne</b> nebo pool dostane problém, a malý vkladatel to vidí až pozdě.",
+  steps:[
+    "Sledujeme 100 největších čistě stablecoinových walletů s dlouhou historií (Aave, Morpho, Pendle a další).",
+    "Ukážeme, kam právě proudí a odkud utíkají: Whale Exit Alert.",
+    "Jedním klikem zrcadlíš jejich mix. Při odchodu velryb dostaneš alarm nebo odejdeš automaticky."
+  ],
+  beat:[
+    "Capital Maximizer vybírá podle sazby a pravidel. Mirror přidává, co dělají nejinformovanější peníze.",
+    "Signál k odchodu, který žádná sazba nedá. Zrcadlí jen na platformy, které splní kritéria Capital Maximizeru."
+  ],
+  now:"Stablecoiny jsou přes $300 mld a GENIUS Act zakazuje issuerům platit výnos, takže výnos se hledá v DeFi.",
+  money:"10 % ze zisku nad benchmark (Aave USDC) nebo předplatné alertů.",
+  mvp:"Dashboard toků a exit alerty z DeFiLlama a onchain dat: automatický build. Zrcadlení přes router Capital Maximizeru jde na lidskou kontrolu.",
+  exists:"Nansen má štítky smart money, DeFi Alpha Suite jen signály. Automatické zrcadlení stablecoinového mixu nikdo.",
+  risk:"Velryby mají jiné důvody (hedging, pobídky). Proto jen čisté stablecoinové wallety a jen platformy s $30M+, auditem a rokem provozu."
+}
+];
+
+/* Czech typography: keep one-letter prepositions on the line with the next word. */
+const nb = s => s.replace(/(^|[\s(„>])([vkszaiouVKSZAIOU])\s/g, "$1$2 ");
+const sum = a => a.reduce((x,y)=>x+y,0);
+
+function pips(v, b){
+  let h = "";
+  for(let i=1;i<=5;i++) h += `<i class="${i<=v?"on":""} ${i===b?"b":""}"></i>`;
+  return `<span class="pips" aria-hidden="true">${h}</span>`;
+}
+function statCard(idea, n){
+  const b = BENCH[idea.vs];
+  const rows = idea.s.map((v,i)=>{
+    const bv = b.s[i], d = v-bv;
+    const m = d>0 ? `<span class="mark w" title="lepší">▲ ${d}</span>` : d<0 ? `<span class="mark l" title="horší">▼ ${-d}</span>` : `<span class="mark e" title="stejné">=</span>`;
+    return `<li class="stat"><span class="lab">${CRIT[i]} ${m}</span><span class="val"><b>${v}</b> / vzor ${bv}</span>${pips(v,bv)}</li>`;
+  }).join("");
+  return `<aside class="tcard" aria-label="Skóre ${idea.name} proti ${b.name}">
+    <div class="top"><span class="no">T${n}</span><span class="sum"><b>${sum(idea.s)}</b>bodů z 30 · vzor ${sum(b.s)}</span></div>
+    <ul class="stats">${rows}</ul>
+    <div class="legend"><span><i></i>${idea.name}</span><span><i class="b"></i>${b.name}</span></div>
+  </aside>`;
+}
+
+function slideTitle(){
+  const rot = [-3,2,-1.5,3,-2.5,1.5];
+  const minis = IDEAS.map((d,i)=>`<div class="mini" style="--r:${rot[i]}deg"><div class="k">Trumf ${i+1}</div><div class="n">${d.name}</div><div class="t">${sum(d.s)} / 30 · přebíjí ${BENCH[d.vs].name}</div></div>`).join("");
+  return `<section class="slide title" id="uvod"><div class="inner">
+    <div class="eyebrow"><b>Crypto produkty</b><span>6 nápadů</span><span>listopad 2026</span></div>
+    <h1>Šest<br><span>trumfů</span></h1>
+    <p class="lead">${nb("Šest samostatných crypto produktů, které přebíjejí čtyři nejlepší aplikace Cymetica. Každý řeší bolest, kterou komunita v roce 2026 opravdu má, a každý jde postavit přes Build it Better.")}</p>
+    <div class="fan">${minis}</div>
+    <div class="meta"><span>Šipky ↑ ↓ nebo mezerník</span><span>Skóre 1–5 je náš odhad</span><span>Čísla ze zdrojů na posledním slidu</span></div>
+  </div></section>`;
+}
+
+function slideBar(){
+  const cards = Object.values(BENCH).map(b=>`<div class="bcard"><div class="n">${b.name}</div><p>${nb(b.line)}</p><div class="sc"><b>${sum(b.s)}</b> / 30</div></div>`).join("");
+  const crit = [
+    ["Wow / sdílitelnost","Pošle to někdo na X sám od sebe?"],
+    ["Peníze pro uživatele","Konkrétní $ navíc, nebo ochrana před ztrátou."],
+    ["Exkluzivita","Nic stejného zatím neexistuje. Ověřeno hledáním."],
+    ["Síťový efekt","S každým dalším uživatelem je produkt lepší."],
+    ["Postavitelnost","MVP přes Build it Better, ideálně jen ke čtení nebo v paper módu."],
+    ["Příjmový model","Poplatek, spread nebo token."]
+  ].map(c=>`<li><b>${c[0]}</b>${nb(c[1])}</li>`).join("");
+  return `<section class="slide" id="latka"><div class="inner">
+    <div class="eyebrow"><b>Laťka</b><span>4 vzory</span></div>
+    <h2 style="font-size:clamp(32px,4.2vw,56px);line-height:.98;font-weight:850;font-stretch:118%">Co dělá ty čtyři top</h2>
+    <p class="lead">${nb("Jasný přínos v penězích, jedno číslo, které se dá ukázat, a poctivé mantinely: prověřené platformy, paper mód, žádné sliby a poplatek jen ze zisku.")}</p>
+    <div class="bench-row">${cards}</div>
+    <div class="rule">
+      <div class="test"><h3>Trumf test</h3><p>${nb("Nový nápad musí proti vzoru, který vyzývá, vyhrát aspoň ve 2 kritériích a v žádném neprohrát o víc než 1 bod. Všech šest prošlo. Riziko se do skóre nepočítá, každý nápad ho má rozepsané zvlášť.")}</p></div>
+      <ol class="crit">${crit}</ol>
+    </div>
+  </div></section>`;
+}
+
+function slideIdea(d, i){
+  const b = BENCH[d.vs];
+  return `<section class="slide idea" id="trumf-${i+1}"><div class="inner">
+    <div class="head">
+      <div class="eyebrow"><b>Trumf ${i+1} / 6</b><span>přebíjí ${b.name}</span></div>
+      <h2>${d.name}</h2>
+      <p class="hook">${nb(d.hook)}</p>
+    </div>
+    <div class="grid">
+      ${statCard(d, i+1)}
+      <div class="body">
+        <p class="problem">${nb(d.problem)}</p>
+        <ol class="steps">${d.steps.map(s=>`<li>${nb(s)}</li>`).join("")}</ol>
+        <div class="blocks">
+          <div class="blk beat"><h3>Proč přebíjí ${b.name}</h3><ul>${d.beat.map(s=>`<li>${nb(s)}</li>`).join("")}</ul></div>
+          <div class="blk"><h3>Proč teď</h3><p>${nb(d.now)}</p></div>
+          <div class="blk"><h3>Peníze</h3><p>${nb(d.money)}</p></div>
+          <div class="blk" style="grid-column:1/-1"><h3>MVP přes Build it Better</h3><p>${nb(d.mvp)}</p></div>
+        </div>
+        <div class="foot">
+          <div class="blk"><h3>Co už existuje</h3><p>${nb(d.exists)}</p></div>
+          <div class="blk"><h3>Riziko a jak ho tlumit</h3><p>${nb(d.risk)}</p></div>
+        </div>
+      </div>
+    </div>
+  </div></section>`;
+}
+
+function slideTable(){
+  const cell = v => `<td><span class="cell ${v===5?"c5":v===4?"c4":""}">${v}</span></td>`;
+  const ideaRows = IDEAS.map(d=>`<tr class="idea-row"><td>${d.name}<span class="vs">vs ${BENCH[d.vs].name}</span></td>${d.s.map(cell).join("")}<td class="tot">${sum(d.s)}</td></tr>`).join("");
+  const benchRows = Object.values(BENCH).map(b=>`<tr class="bm"><td>${b.name}</td>${b.s.map(v=>`<td>${v}</td>`).join("")}<td class="tot">${sum(b.s)}</td></tr>`).join("");
+  return `<section class="slide" id="srovnani"><div class="inner">
+    <div class="eyebrow"><b>Srovnání</b><span>6 trumfů + 4 vzory × 6 kritérií</span></div>
+    <h2 style="font-size:clamp(32px,4.2vw,56px);line-height:.98;font-weight:850;font-stretch:118%">Každý trumf má víc bodů než vzor, který přebíjí</h2>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>Produkt</th>${CRIT_SHORT.map(c=>`<th>${c}</th>`).join("")}<th>Celkem</th></tr></thead>
+      <tbody>${ideaRows}<tr><td colspan="8" style="padding:0"><div class="split eyebrow">Vzory</div></td></tr>${benchRows}</tbody>
+    </table></div>
+    <p class="note">${nb("Skóre 1–5 je náš odhad podle rešerše z 5. 11. 2026. Vzory ztrácejí hlavně na síťovém efektu: Capital Maximizer, Gem Screener i Airdrop Farmer fungují stejně pro prvního i pro milióntého uživatele. Trumfy ztrácejí na postavitelnosti, protože plná verze hýbe penězi a musí na lidskou kontrolu.")}</p>
+  </div></section>`;
+}
+
+function slideNext(){
+  const q = [
+    ["Lost & Found","auto","Celý sken je jen ke čtení, takže ho Build it Better postaví sám (medián buildu ~23,5 h). Karta „Našel jsem $X“ přivede první uživatele."],
+    ["Pay-on-Win Calls","auto","Nejdřív paper stake a veřejný žebříček. Track recordy se začnou sbírat hned a escrow přijde, až bude komu věřit."],
+    ["Rug Market","auto","Paper trhy „Rug do 7 dní?“ na existujícím prediction engine. Ceny krytí jsou samy o sobě nový signál."],
+    ["Whale Yield Mirror","auto","Dashboard toků a exit alerty. Zrcadlení přes router Capital Maximizeru jako druhý krok."],
+    ["Liquidation Shield","human","Alerty a mapa likvidací hned, zásahy s klíčem bez práva výběru po lidské kontrole."],
+    ["Agent IPO","human","Až poslední: potřebuje agenty s 90denním track recordem a právní kontrolu. Paper podíly můžou běžet dřív."]
+  ].map(x=>`<li><span class="n">${x[0]}</span><span class="chip ${x[1]}">${x[1]==="auto"?"MVP automaticky":"lidská kontrola"}</span><p>${nb(x[2])}</p></li>`).join("");
+  return `<section class="slide" id="co-dal"><div class="inner">
+    <div class="eyebrow"><b>Co dál</b><span>pořadí podání na Build it Better</span></div>
+    <h2 style="font-size:clamp(32px,4.2vw,56px);line-height:.98;font-weight:850;font-stretch:118%">Začít tím, co se postaví samo</h2>
+    <ol class="queue">${q}</ol>
+    <div class="facts">
+      <div><b>Request do 8 000 znaků</b>${nb("Jedna položka na řádek, max. 40 položek. Jedna otevřená žádost na aplikaci.")}</div>
+      <div><b>Každý build má vlastní memecoin</b>${nb("Patří tomu, kdo build zadal. Na Robinhood Chain bere tvůrce 80 % z 0,25% poplatku křivky.")}</div>
+      <div><b>Peníze vždy přes člověka</b>${nb("Vklady, výběry, objednávky a podpisy transakcí automatický build nedělá. Proto každý trumf startuje v paper módu.")}</div>
+    </div>
+  </div></section>`;
+}
+
+function slideSources(){
+  const S = [
+    ["The Block: pump.fun graduation rate 2026","https://www.theblock.co/news/defi/2026-07-29-pump-fun-token-graduation-rate-jumps-boost-changes-launch-incentives-409815"],
+    ["CoinLaw: memecoin statistics (Solidus 98,6 %)","https://coinlaw.io/memecoin-statistics/"],
+    ["Crypto Times: Robinhood Chain rug ring","https://www.cryptotimes.io/2026/09/28/analyst-exposes-18-43m-robinhood-chain-memecoin-rug-pull-ring/"],
+    ["Bitget: DeFi insurance nekryje rugy","https://www.bitget.com/news/detail/12560605150850"],
+    ["Bitquery: 74 % solanových memecoin kupců ztrácí","https://bitquery.io/investigations/solana-memecoin-traders-lose-money"],
+    ["Cointelegraph: ZachXBT a KOL shilling","https://cointelegraph.com/news/zachxbt-slams-crypto-influencer-over-memecoin-promotions"],
+    ["Calledit: commit-reveal pro trade cally","https://calledit.buzz"],
+    ["Chainward: Virtuals fees","https://chainward.ai/decodes/virtuals-top-dog"],
+    ["DEXTools: Daos.fun a prémie k NAV","https://www.dextools.io/tutorials/what-is-daos-fun-solana-dao-fund-launchpad-guide-2026"],
+    ["Hyperliquid docs: vaults","https://hyperliquid.gitbook.io/hyperliquid-docs/hypercore/vaults/for-vault-depositors-legacy"],
+    ["CoinLaw: airdrop statistiky (Optimism, $4,5 mld)","https://coinlaw.io/token-airdrop-statistics/"],
+    ["Solana Tracker: Refund SOL (1 %)","https://www.solanatracker.io/refund-sol"],
+    ["TokenPost: likvidace říjen 2026","https://www.tokenpost.com/news/investing/45918"],
+    ["Yahoo Finance: největší likvidace od 10. 10. 2025","https://finance.yahoo.com/markets/crypto/articles/liquidations-hit-highest-level-since-171751793.html"],
+    ["DeFi Saver: automatizace","https://www.defisaver.com/features/automation"],
+    ["Stablecoin Insider: GENIUS Act a výnos","https://stablecoininsider.org/can-you-still-earn-yield-on-stablecoins-after-the-occs-genius-act-rule/"],
+    ["Nansen: Smart Money dashboard","https://nansen.ai/post/nansens-new-smart-money-dashboard"],
+    ["Cymetica: Build it Better","https://cymetica.com/build-it-better"]
+  ].map(s=>`<li><a href="${s[1]}" target="_blank" rel="noopener">${s[0]}</a></li>`).join("");
+  return `<section class="slide" id="zdroje"><div class="inner">
+    <div class="eyebrow"><b>Zdroje</b><span>staženo 5. 11. 2026</span></div>
+    <h2 style="font-size:clamp(28px,3.2vw,42px);line-height:1;font-weight:850;font-stretch:115%">Odkud jsou čísla</h2>
+    <ul class="src">${S}</ul>
+    <p class="note">${nb("Některá čísla mají jen jeden zdroj a weby si občas odporují; v prezentaci je vždy uvedené rozpětí. Nejde o investiční doporučení. U produktů, které hýbou penězi, je nutná právní kontrola před spuštěním.")}</p>
+  </div></section>`;
+}
+
+const deck = document.getElementById("deck");
+deck.innerHTML = slideTitle() + slideBar() + IDEAS.map(slideIdea).join("") + slideTable() + slideNext() + slideSources();
+
+/* Navigation: arrows, PageUp/Down, space, buttons; the counter follows the scroll. */
+const slides = [...deck.querySelectorAll(".slide")];
+const pos = document.getElementById("pos");
+let cur = 0;
+const go = i => { cur = Math.max(0, Math.min(slides.length-1, i)); slides[cur].scrollIntoView({behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block:"start"}); };
+const io = new IntersectionObserver(es=>{
+  es.forEach(e=>{ if(e.isIntersecting){ cur = slides.indexOf(e.target); pos.textContent = `${cur+1} / ${slides.length}`; } });
+},{threshold:.5});
+slides.forEach(s=>io.observe(s));
+pos.textContent = `1 / ${slides.length}`;
+document.getElementById("prev").addEventListener("click",()=>go(cur-1));
+document.getElementById("next").addEventListener("click",()=>go(cur+1));
+addEventListener("keydown",e=>{
+  if(e.target.closest && e.target.closest("input,textarea")) return;
+  if(["ArrowDown","ArrowRight","PageDown"," "].includes(e.key)){ e.preventDefault(); go(cur+1); }
+  else if(["ArrowUp","ArrowLeft","PageUp"].includes(e.key)){ e.preventDefault(); go(cur-1); }
+  else if(e.key==="Home"){ e.preventDefault(); go(0); }
+  else if(e.key==="End"){ e.preventDefault(); go(slides.length-1); }
+});
+</script>

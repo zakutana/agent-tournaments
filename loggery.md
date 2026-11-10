@@ -58,3 +58,13 @@ Pokud je hrdlo kruhové o průměru 40 mm, musí úhlopříčka příčného ře
 
 - Zboží.cz (srovnávač) jsem použil jen k nalezení obchodů; všechny údaje výše jsou z otevřených stránek obchodů nebo výrobce.
 - Skladové zásoby: u Voltworld, SmartElektro, Revizeshop a Garni-meteo je jen „Skladem" bez počtu; 2 ks se do košíku vešly bez hlášení. Počet kusů uvádí pouze Gastro-bazar („2 ks").
+
+## 8. Loggery s mobilní aplikací (Bluetooth) – doplněno 2026-11-10
+
+| Odkaz | Model | Cena za kus (s DPH) | 2 ks v košíku | Skladem | Aplikace | Parametry | Poznámky |
+|---|---|---|---|---|---|---|---|
+| [Promertech](https://promertech.cz/testo-174-t-bt-mini-zaznamnik-teploty-s-pripojenim-bluetooth-r-a-aplikaci) | **Testo 174 T BT** (kód 0572 1742 02) | **3 025 Kč** (2 500 Kč bez DPH) | „6 050 Kč" | „Skladem u dodavatele (expedice do 14 dnů)" | „Bezplatná aplikace včetně generování zpráv a funkce exportu"; „Jednoduchá analýza dat přes Bluetooth přímo v místě měření ze vzdálenosti až 30 metrů"; „testo Smart App" | Stránka Promertechu uvádí jen rozsah „-30 °C až +70 °C". Zbytek z českého datasheetu distributora Kubošek (PDF, ne ze stránky obchodu): „±0,5 °C (-30 až +70 °C)", „0,1 °C", „16 000 naměřených hodnot", „1 min až 24 h", „60 × 38 × 18,5 mm", „2 × lithiové baterie (CR 2032)", „500 dní"; aplikace pro „iOS a Android"; export „PDF / CSV / JSON (možné pouze po registraci)" | Stejné tělo jako USB verze → průchod hrdlem 4 cm stejně nejistý (výpočet 42,3 mm). Pro živý přenos z uzavřené nerezové termosky tento údaj na stránkách nenalezen. |
+| [Promertech](https://promertech.cz/uni-t-a57-bt-datalogger) | UNI-T A57 BT | 1 237,1 Kč | neověřeno | „Skladem u dodavatele (expedice do 3 dnů)" | „aplikace Bluetooth", „podpora mobilní aplikace: ano" | „nastavitelný interval záznamu: 10 s – 24 h", „64000 skupin", „rozměr: 104 × 62 × 25 mm", přesnost vnitřního senzoru na stránce „±3 °C", přesnost externích sond ±0,4–0,5 °C | **Vyřazeno:** 62 mm široké (nevejde se do hrdla 4 cm), vysoká přesnost jen s externí sondou na kabelu |
+
+- UNI-T UT330C a GARNI GAR 175 mobilní aplikaci na stránkách obchodů ani výrobce nemají (jen PC software) → **nenalezeno**.
+- Další Bluetooth teplotní loggery v českých obchodech (Voltworld, Epřístroje, Promertech): nenalezeny (výsledky Voltworld byly klešťové ampérmetry a DL-220THP s USB).
